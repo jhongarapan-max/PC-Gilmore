@@ -1,0 +1,507 @@
+/* ============================================
+   PC GILMORE - About Page Styles
+   ============================================ */
+
+
+/* Page Header */
+
+.page-header {
+    background-color: var(--primary-color);
+    padding: 150px 0 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../assets/image/background_1.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.2;
+}
+
+.page-header-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000000;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 1;
+}
+
+.page-header h1 {
+    color: var(--secondary-color);
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.page-header p {
+    color: rgba(245, 240, 232, 0.9);
+    font-size: 1.2rem;
+}
+
+
+/* About Story Section */
+
+.about-story {
+    padding: 100px 0;
+    background-color: var(--secondary-color);
+}
+
+.story-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.story-text {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.story-text.animated {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.6s ease;
+}
+
+.story-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.story-text p {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.story-image {
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.story-image.animated {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.6s ease 0.2s;
+}
+
+.image-frame {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(139, 26, 26, 0.3);
+}
+
+.image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    min-height: 350px;
+    transition: transform 0.5s ease;
+}
+
+.image-frame:hover img {
+    transform: scale(1.05);
+}
+
+.established {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(139, 26, 26, 0.9);
+    color: var(--secondary-color);
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    z-index: 2;
+}
+
+
+/* Mission Vision Section */
+
+.mission-vision {
+    padding: 100px 0;
+    background-color: white;
+}
+
+.mv-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+
+.mv-card {
+    background-color: var(--secondary-color);
+    border-radius: 20px;
+    padding: 50px 40px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.mv-card.animated {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.6s ease;
+}
+
+.mv-card:nth-child(2).animated {
+    transition-delay: 0.2s;
+}
+
+.mv-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+
+.mv-icon svg {
+    width: 40px;
+    height: 40px;
+    color: var(--secondary-color);
+}
+
+.mv-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.mv-card p {
+    color: #555;
+    line-height: 1.8;
+}
+
+
+/* Core Values Section */
+
+.core-values {
+    padding: 100px 0;
+    background-color: var(--secondary-color);
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.value-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 40px 30px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-speed);
+}
+
+.value-card.animated {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(139, 26, 26, 0.15);
+}
+
+.value-number {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgba(139, 26, 26, 0.1);
+}
+
+.value-card h4 {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.value-card p {
+    color: #666;
+    line-height: 1.7;
+}
+
+
+/* About CTA Section */
+
+.about-cta {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    text-align: center;
+}
+
+.about-cta .cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.about-cta h2 {
+    color: var(--secondary-color);
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.about-cta p {
+    color: rgba(245, 240, 232, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 35px;
+}
+
+.about-cta .cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.about-cta .btn-secondary {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.about-cta .btn-secondary:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+
+/* Responsive Styles */
+
+
+/* Tablet Landscape */
+
+@media (max-width: 992px) {
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    .page-header p {
+        font-size: 1.1rem;
+    }
+    .story-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .story-image {
+        order: -1;
+    }
+    .image-frame {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    .mv-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* Tablet Portrait */
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 110px 0 50px;
+    }
+    .page-header h1 {
+        font-size: 1.9rem;
+    }
+    .page-header p {
+        font-size: 1rem;
+    }
+    .about-story,
+    .mission-vision,
+    .core-values,
+    .team-section,
+    .about-cta {
+        padding: 60px 0;
+    }
+    .story-text h2 {
+        font-size: 1.7rem;
+    }
+    .story-text p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+    .image-frame {
+        max-width: 400px;
+    }
+    .image-frame img {
+        min-height: 260px;
+    }
+    .established {
+        padding: 8px 20px;
+        font-size: 1rem;
+        bottom: 15px;
+    }
+    .mv-card {
+        padding: 35px 30px;
+        border-radius: 15px;
+    }
+    .mv-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+    .mv-icon svg {
+        width: 35px;
+        height: 35px;
+    }
+    .mv-card h3 {
+        font-size: 1.3rem;
+    }
+    .mv-card p {
+        font-size: 0.95rem;
+    }
+    .values-grid {
+        gap: 20px;
+    }
+    .value-card {
+        padding: 30px 25px;
+    }
+    .value-number {
+        font-size: 2.5rem;
+    }
+    .value-card h4 {
+        font-size: 1.15rem;
+    }
+    .value-card p {
+        font-size: 0.9rem;
+    }
+    .about-cta h2 {
+        font-size: 1.7rem;
+    }
+    .about-cta p {
+        font-size: 1rem;
+    }
+    .stat-number {
+        font-size: 2.5rem;
+    }
+}
+
+
+/* Mobile */
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 100px 0 40px;
+    }
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+    .page-header p {
+        font-size: 0.9rem;
+    }
+    .about-story,
+    .mission-vision,
+    .core-values,
+    .about-cta {
+        padding: 50px 0;
+    }
+    .story-text h2 {
+        font-size: 1.5rem;
+    }
+    .story-text p {
+        font-size: 0.9rem;
+    }
+    .image-frame {
+        max-width: 100%;
+        border-radius: 15px;
+    }
+    .image-frame img {
+        min-height: 220px;
+    }
+    .established {
+        padding: 6px 15px;
+        font-size: 0.9rem;
+        bottom: 12px;
+    }
+    .mv-card {
+        padding: 30px 20px;
+    }
+    .mv-icon {
+        width: 60px;
+        height: 60px;
+    }
+    .mv-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+    .mv-card h3 {
+        font-size: 1.2rem;
+    }
+    .mv-card p {
+        font-size: 0.9rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+    .value-card {
+        padding: 25px 20px;
+    }
+    .value-number {
+        font-size: 2rem;
+    }
+    .value-card h4 {
+        font-size: 1.1rem;
+    }
+    .about-cta h2 {
+        font-size: 1.4rem;
+    }
+    .about-cta p {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
+    .about-cta .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .about-cta .cta-buttons .btn {
+        width: 100%;
+        max-width: 220px;
+    }
+}

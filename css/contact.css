@@ -32,7 +32,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(139, 26, 26, 0.95) 0%, rgba(92, 16, 16, 0.98) 100%);
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(26, 26, 46, 0.98) 100%);
 }
 
 .page-header .container {
@@ -98,8 +98,8 @@
     display: block;
     padding: 16px 18px;
     border-radius: 12px;
-    border: 1px solid rgba(139, 26, 26, 0.15);
-    background: linear-gradient(135deg, rgba(139, 26, 26, 0.06) 0%, rgba(245, 240, 232, 0.8) 100%);
+    border: 1px solid rgba(0, 102, 255, 0.15);
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.06) 0%, rgba(248, 249, 250, 0.8) 100%);
     margin-bottom: 20px;
 }
 
@@ -131,12 +131,42 @@
 }
 
 .inquiry-product-list li {
-    padding: 6px 10px;
-    background-color: rgba(139, 26, 26, 0.08);
+    padding: 8px 12px;
+    background-color: rgba(0, 102, 255, 0.08);
     border-radius: 6px;
     border-left: 3px solid var(--primary-color);
     font-weight: 500;
     color: var(--text-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.inquiry-product-list li .product-name {
+    flex: 1;
+}
+
+.btn-remove-product {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    transition: all 0.2s ease;
+}
+
+.btn-remove-product:hover {
+    background-color: rgba(0, 102, 255, 0.15);
+    color: var(--accent-color);
+}
+
+.btn-remove-product svg {
+    display: block;
 }
 
 .btn-choose-product {
@@ -188,7 +218,7 @@
     outline: none;
     border-color: var(--primary-color);
     background-color: white;
-    box-shadow: 0 0 0 4px rgba(139, 26, 26, 0.1);
+    box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
 }
 
 .form-group input::placeholder,

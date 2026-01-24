@@ -72,9 +72,17 @@ function handleProductInquiry() {
                     `Inquiring about (${inquiryProducts.length} products):`;
             }
 
-            // Display all products in the list
-            productList.innerHTML = inquiryProducts.map(product =>
-                `<li>${product}</li>`
+            // Display all products in the list with remove buttons
+            productList.innerHTML = inquiryProducts.map((product, index) =>
+                `<li>
+                    <span class="product-name">${product}</span>
+                    <button type="button" class="btn-remove-product" onclick="removeInquiryProduct(${index})" title="Remove product">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </li>`
             ).join('');
 
             // Pre-fill the order details with all products ONLY if empty
@@ -117,6 +125,51 @@ function handleProductInquiry() {
         if (banner) banner.style.display = 'none';
     }
 }
+
+/* ============================================
+   Remove Product from Inquiry List
+   ============================================ */
+function removeInquiryProduct(index) {
+    try {
+        // Get current products
+        const stored = sessionStorage.getItem('inquiryProducts');
+        if (!stored) return;
+        
+        let inquiryProducts = JSON.parse(stored);
+        
+        // Remove the product at the specified index
+        if (index >= 0 && index < inquiryProducts.length) {
+            const removedProduct = inquiryProducts[index];
+            inquiryProducts.splice(index, 1);
+            
+            // Update sessionStorage
+            sessionStorage.setItem('inquiryProducts', JSON.stringify(inquiryProducts));
+            
+            // Update the order details textarea to remove the product
+            const orderDetailsTextarea = document.getElementById('orderDetails');
+            if (orderDetailsTextarea) {
+                let currentText = orderDetailsTextarea.value;
+                // Remove the product from the text
+                currentText = currentText.replace(`Product: ${removedProduct}\n`, '');
+                currentText = currentText.replace(new RegExp(`\\d+\\.\\s*${escapeRegExp(removedProduct)}\\n?`, 'g'), '');
+                orderDetailsTextarea.value = currentText;
+            }
+            
+            // Refresh the display
+            handleProductInquiry();
+        }
+    } catch (e) {
+        console.error('Error removing inquiry product:', e);
+    }
+}
+
+// Helper function to escape special regex characters
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Make removeInquiryProduct available globally
+window.removeInquiryProduct = removeInquiryProduct;
 
 /* ============================================
    Contact Form Persistence

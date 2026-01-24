@@ -46,14 +46,31 @@
     <!-- Category Filter -->
     <section class="category-filter">
         <div class="container">
-            <div class="filter-wrapper">
-                <button class="filter-btn active" data-category="all">All Products</button>
-                <button class="filter-btn" data-category="processors">Processors</button>
-                <button class="filter-btn" data-category="graphics">Graphics Cards</button>
-                <button class="filter-btn" data-category="motherboards">Motherboards</button>
-                <button class="filter-btn" data-category="memory">Memory</button>
-                <button class="filter-btn" data-category="storage">Storage</button>
-                <button class="filter-btn" data-category="peripherals">Peripherals</button>
+            <div class="filter-container">
+                <button class="filter-nav filter-prev" onclick="scrollFilterLeft()" aria-label="Previous categories">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <div class="filter-wrapper">
+                    <button class="filter-btn active" data-category="all">All Products</button>
+                    <button class="filter-btn" data-category="processors">Processors</button>
+                    <button class="filter-btn" data-category="graphics">Graphics Cards</button>
+                    <button class="filter-btn" data-category="motherboards">Motherboards</button>
+                    <button class="filter-btn" data-category="memory">Memory</button>
+                    <button class="filter-btn" data-category="storage">Storage</button>
+                    <button class="filter-btn" data-category="peripherals">Peripherals</button>
+                    <button class="filter-btn" data-category="cooler-fan">Cooler Fan</button>
+                    <button class="filter-btn" data-category="computer-accessories">Computer Accessories</button>
+                    <button class="filter-btn" data-category="cctv-ip-camera">CCTV/IP Camera</button>
+                    <button class="filter-btn" data-category="earphone-headset">Earphone/Headset</button>
+                    <button class="filter-btn" data-category="network-components">Network Components</button>
+                </div>
+                <button class="filter-nav filter-next" onclick="scrollFilterRight()" aria-label="Next categories">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
             </div>
         </div>
     </section>
@@ -62,209 +79,7 @@
     <section class="products-section">
         <div class="container">
             <div class="products-grid">
-                <!-- Processors -->
-                <div class="product-card animate-on-scroll" data-category="processors">
-                    <div class="product-badge">Popular</div>
-                    <div class="product-image">
-                        <img src="assets/image/products/intel-i9-14900k.png" alt="Intel Core i9-14900K" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=Intel+i9-14900K'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Processors</span>
-                        <h4>Intel Core i9-14900K</h4>
-                        <p>24-Core, 32-Thread Desktop Processor</p>
-                        <div class="product-price">₱34,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="processors">
-                    <div class="product-image">
-                        <img src="assets/image/products/amd-ryzen-9-7950x.png" alt="AMD Ryzen 9 7950X" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=AMD+Ryzen+9+7950X'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Processors</span>
-                        <h4>AMD Ryzen 9 7950X</h4>
-                        <p>16-Core, 32-Thread Desktop Processor</p>
-                        <div class="product-price">₱32,499</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="processors">
-                    <div class="product-image">
-                        <img src="assets/image/products/intel-i5-14600k.png" alt="Intel Core i5-14600K" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=Intel+i5-14600K'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Processors</span>
-                        <h4>Intel Core i5-14600K</h4>
-                        <p>14-Core, 20-Thread Desktop Processor</p>
-                        <div class="product-price">₱18,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <!-- Graphics Cards -->
-                <div class="product-card animate-on-scroll" data-category="graphics">
-                    <div class="product-badge">Hot</div>
-                    <div class="product-image">
-                        <img src="assets/image/products/nvidia-rtx-4090.png" alt="NVIDIA RTX 4090" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=NVIDIA+RTX+4090'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Graphics Cards</span>
-                        <h4>NVIDIA RTX 4090</h4>
-                        <p>24GB GDDR6X, Ray Tracing, DLSS 3</p>
-                        <div class="product-price">₱109,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="graphics">
-                    <div class="product-badge">Best Seller</div>
-                    <div class="product-image">
-                        <img src="assets/image/products/nvidia-rtx-4070ti.png" alt="NVIDIA RTX 4070 Ti" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=NVIDIA+RTX+4070+Ti'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Graphics Cards</span>
-                        <h4>NVIDIA RTX 4070 Ti</h4>
-                        <p>12GB GDDR6X, Ray Tracing, DLSS 3</p>
-                        <div class="product-price">₱49,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="graphics">
-                    <div class="product-image">
-                        <img src="assets/image/products/amd-rx-7900xtx.png" alt="AMD RX 7900 XTX" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=AMD+RX+7900+XTX'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Graphics Cards</span>
-                        <h4>AMD RX 7900 XTX</h4>
-                        <p>24GB GDDR6, Ray Tracing</p>
-                        <div class="product-price">₱59,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <!-- Motherboards -->
-                <div class="product-card animate-on-scroll" data-category="motherboards">
-                    <div class="product-image">
-                        <img src="assets/image/products/asus-rog-maximus-z790.png" alt="ASUS ROG Maximus Z790" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=ASUS+ROG+Z790'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Motherboards</span>
-                        <h4>ASUS ROG Maximus Z790</h4>
-                        <p>Intel Z790, DDR5, PCIe 5.0</p>
-                        <div class="product-price">₱35,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="motherboards">
-                    <div class="product-image">
-                        <img src="assets/image/products/msi-meg-x670e.png" alt="MSI MEG X670E ACE" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=MSI+MEG+X670E'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Motherboards</span>
-                        <h4>MSI MEG X670E ACE</h4>
-                        <p>AMD X670E, DDR5, PCIe 5.0</p>
-                        <div class="product-price">₱32,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <!-- Memory -->
-                <div class="product-card animate-on-scroll" data-category="memory">
-                    <div class="product-image">
-                        <img src="assets/trident.png" alt="G.Skill Trident Z5 RGB" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=G.Skill+Trident+Z5'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Memory</span>
-                        <h4>G.Skill Trident Z5 RGB</h4>
-                        <p>32GB (2x16GB) DDR5-6000 CL30</p>
-                        <div class="product-price">₱12,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="memory">
-                    <div class="product-image">
-                        <img src="assets/corsair.png" alt="Corsair Vengeance DDR5" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=Corsair+DDR5'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Memory</span>
-                        <h4>Corsair Vengeance DDR5</h4>
-                        <p>64GB (2x32GB) DDR5-5600</p>
-                        <div class="product-price">₱18,499</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <!-- Storage -->
-                <div class="product-card animate-on-scroll" data-category="storage">
-                    <div class="product-image">
-                        <img src="assets/samsung.png" alt="Samsung 990 Pro" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=Samsung+990+Pro'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Storage</span>
-                        <h4>Samsung 990 Pro</h4>
-                        <p>2TB NVMe M.2 SSD, PCIe 4.0</p>
-                        <div class="product-price">₱12,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="storage">
-                    <div class="product-image">
-                        <img src="assets/wdblack.png" alt="WD Black SN850X" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=WD+Black+SN850X'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Storage</span>
-                        <h4>WD Black SN850X</h4>
-                        <p>1TB NVMe M.2 SSD, PCIe 4.0</p>
-                        <div class="product-price">₱7,499</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <!-- Peripherals -->
-                <div class="product-card animate-on-scroll" data-category="peripherals">
-                    <div class="product-image">
-                        <img src="assets/keyboard.webp" alt="Logitech G Pro X Keyboard" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=Logitech+G+Pro+X'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Peripherals</span>
-                        <h4>Logitech G Pro X</h4>
-                        <p>Mechanical Gaming Keyboard</p>
-                        <div class="product-price">₱7,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="peripherals">
-                    <div class="product-image">
-                        <img src="assets/mouse.webp" alt="Logitech G Pro X Superlight" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=G+Pro+Superlight'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Peripherals</span>
-                        <h4>Logitech G Pro X Superlight</h4>
-                        <p>Wireless Gaming Mouse, 25K DPI</p>
-                        <div class="product-price">₱7,499</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
-
-                <div class="product-card animate-on-scroll" data-category="peripherals">
-                    <div class="product-image">
-                        <img src="assets/monitor.webp" alt="ASUS ROG Swift 27 Monitor" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=ASUS+ROG+Swift+27'">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Peripherals</span>
-                        <h4>ASUS ROG Swift 27"</h4>
-                        <p>4K 144Hz Gaming Monitor, IPS</p>
-                        <div class="product-price">₱45,999</div>
-                        <a href="contact.html" class="btn btn-primary">Inquire Now</a>
-                    </div>
-                </div>
+                <!-- Loading state will be shown here -->
             </div>
         </div>
     </section>
@@ -376,29 +191,53 @@
                 </svg>
             </button>
             <div class="modal-body">
-                <div class="modal-image">
-                    <img id="modalProductImage" src="" alt="Product Image">
-                    <span id="modalProductBadge" class="modal-badge"></span>
+                <div class="modal-image-gallery">
+                    <div class="modal-main-image">
+                        <img id="modalProductImage" src="" alt="Product Image">
+                        <span id="modalProductBadge" class="modal-badge"></span>
+                        <button class="gallery-nav gallery-prev" onclick="prevModalImage()" aria-label="Previous image">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="gallery-nav gallery-next" onclick="nextModalImage()" aria-label="Next image">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-thumbnails" id="modalThumbnails">
+                        <!-- Thumbnails will be populated by JavaScript -->
+                    </div>
                 </div>
                 <div class="modal-info">
-                    <span id="modalProductCategory" class="modal-category"></span>
-                    <h2 id="modalProductName"></h2>
-                    <p id="modalProductDescription" class="modal-description"></p>
-                    <div class="modal-specs">
-                        <h4>Specifications:</h4>
-                        <ul id="modalProductSpecs">
-                            <li>High-quality components</li>
-                            <li>Manufacturer warranty included</li>
-                            <li>Genuine product guaranteed</li>
-                        </ul>
+                    <div class="modal-info-scrollable">
+                        <span id="modalProductCategory" class="modal-category"></span>
+                        <h2 id="modalProductName"></h2>
+                        <p id="modalProductDescription" class="modal-description"></p>
+                        <div class="modal-specs">
+                            <h4>Specifications:</h4>
+                            <ul id="modalProductSpecs">
+                                <li>High-quality components</li>
+                                <li>Manufacturer warranty included</li>
+                                <li>Genuine product guaranteed</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div id="modalProductPrice" class="modal-price"></div>
-                    <div class="modal-actions">
-                        <a id="modalInquireBtn" href="contact.html" class="btn btn-primary">
-                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" style="margin-right: 8px;">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg> Inquire Now
-                        </a>
+                    <div class="modal-info-fixed">
+                        <div id="modalProductPrice" class="modal-price"></div>
+                        <div class="modal-actions">
+                            <a id="modalShopeeBtn" href="#" class="btn btn-shopee" target="_blank" style="display: none;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;">
+                                    <path d="M12 2C9.24 2 7 4.24 7 7h2c0-1.65 1.35-3 3-3s3 1.35 3 3h2c0-2.76-2.24-5-5-5zm-7 7c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2H5zm7 4c1.93 0 3.5 1.57 3.5 3.5S13.93 20 12 20s-3.5-1.57-3.5-3.5S10.07 13 12 13zm0 2c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/>
+                                </svg> Buy on Shopee
+                            </a>
+                            <a id="modalInquireBtn" href="contact.html" class="btn btn-primary">
+                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" style="margin-right: 8px;">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg> Inquire Now
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

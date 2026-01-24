@@ -137,22 +137,22 @@ function initFooterMobileLayout() {
         const firstSection = document.querySelector('.footer-section:first-child');
         const lastSection = document.querySelector('.footer-section:last-child');
         const socialLinks = firstSection ? firstSection.querySelector('.social-links') : null;
-        
+
         if (!firstSection || !lastSection || !socialLinks) return;
-        
+
         // Check if we're on mobile (768px or less)
         const isMobile = window.innerWidth <= 768;
-        
+
         if (isMobile) {
             // Check if social links are already moved
             if (socialLinks.parentElement === lastSection) return;
-            
+
             // Move social links to after Contact Info
             lastSection.appendChild(socialLinks);
         } else {
             // Check if social links need to be moved back
             if (socialLinks.parentElement === firstSection) return;
-            
+
             // Move social links back to first section
             const description = firstSection.querySelector('p');
             if (description && description.nextSibling !== socialLinks) {
@@ -162,7 +162,7 @@ function initFooterMobileLayout() {
             }
         }
     }
-    
+
     // Run on load and resize
     moveSocialLinks();
     window.addEventListener('resize', debounce(moveSocialLinks, 250));

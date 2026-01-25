@@ -132,8 +132,8 @@
 }
 
 .filter-btn.active {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
+    background-color: rgba(235, 11, 11, 0.747);
+    border-color: rgba(235, 11, 11, 0.747);
     color: var(--text-light);
 }
 

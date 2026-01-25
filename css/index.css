@@ -137,22 +137,38 @@
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: all var(--transition-speed);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .feature-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    background-color: rgba(235, 11, 11, 0.747);
+}
+
+.feature-card:hover h3,
+.feature-card:hover p {
+    color: white;
+}
+
+.feature-card:hover .card-icon {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.feature-card:hover .card-icon svg {
+    stroke: white;
 }
 
 .feature-card .card-icon {
     margin: 0 auto 20px;
     background-color: rgba(0, 102, 255, 0.1);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .feature-card h3 {
     font-size: 1.2rem;
     margin-bottom: 15px;
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .feature-card p {
@@ -160,6 +176,7 @@
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 0;
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 

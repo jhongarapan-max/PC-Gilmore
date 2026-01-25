@@ -328,8 +328,9 @@
     transition: all 0.6s ease 0.2s;
 }
 
+
 .contact-info-card {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(235, 11, 11, 0.747) 100%);
     border-radius: 20px;
     padding: 50px;
     color: var(--secondary-color);

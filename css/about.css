@@ -239,7 +239,7 @@
     right: 20px;
     font-size: 3rem;
     font-weight: 800;
-    color: rgba(0, 102, 255, 0.1);
+    color: rgba(235, 11, 11, 0.747);
 }
 
 .value-card h4 {
@@ -517,4 +517,15 @@
         width: 100%;
         max-width: 220px;
     }
+}
+
+
+.mv-card:nth-child(1):hover .mv-icon {
+    background-color: rgba(235, 11, 11, 0.747);
+    transition: background-color var(--transition-speed);
+}
+
+.mv-card:nth-child(2):hover .mv-icon {
+    background-color: rgba(20, 85, 224, 0.856);
+    transition: background-color var(--transition-speed);
 }

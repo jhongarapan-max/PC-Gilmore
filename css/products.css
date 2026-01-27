@@ -689,6 +689,15 @@
     transition: background-color var(--transition-speed), transform var(--transition-speed);
 }
 
+.btn-shopee .btn-shopee-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    margin-right: 8px;
+    /* ensure visibility on orange background if logo is dark */
+    filter: brightness(0) invert(1);
+}
+
 .btn-shopee:hover {
     background-color: #D73211;
     color: white;

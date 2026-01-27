@@ -148,6 +148,18 @@ a {
     border-radius: 5px;
     transition: all var(--transition-speed);
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link svg {
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
+.nav-link span {
+    display: inline-block;
 }
 
 .nav-link::after {
@@ -189,6 +201,31 @@ a {
     background-color: var(--secondary-color);
     border-radius: 3px;
     transition: all var(--transition-speed);
+}
+
+/* Shopee Button for Mobile */
+.nav-shopee-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    transition: all var(--transition-speed);
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-shopee-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.nav-shopee-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
 }
 
 
@@ -350,6 +387,19 @@ section {
     color: var(--secondary-color);
 }
 
+/* Contact Info Section - Yellow styling (excluding address) */
+.footer-section:last-child li:not(:first-child) {
+    color: #ffd700;
+}
+
+.footer-section:last-child li:not(:first-child) a {
+    color: #ffd700;
+}
+
+.footer-section:last-child li:not(:first-child) a:hover {
+    color: #ffed4e;
+}
+
 .footer-logo {
     display: flex;
     align-items: center;
@@ -392,6 +442,58 @@ section {
     width: 20px;
     height: 20px;
     fill: var(--secondary-color);
+}
+
+.social-link img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+/* QR Code Section */
+.qr-code-section {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.qr-codes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.qr-code-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px;
+    background-color: rgba(245, 240, 232, 0.05);
+    border-radius: 8px;
+    transition: all var(--transition-speed);
+}
+
+.qr-code-container:hover {
+    background-color: rgba(245, 240, 232, 0.1);
+    transform: translateY(-2px);
+}
+
+.qr-code-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    background-color: white;
+    padding: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.qr-code-label {
+    font-size: 0.75rem;
+    color: rgba(245, 240, 232, 0.9);
+    font-weight: 500;
 }
 
 .footer-bottom {
@@ -611,6 +713,13 @@ section {
         width: 28px;
         height: 3px;
     }
+    .nav-shopee-btn {
+        display: flex;
+        position: absolute;
+        right: 20px;
+        width: 36px;
+        height: 36px;
+    }
     .nav-menu {
         position: fixed;
         top: 75px;
@@ -641,6 +750,13 @@ section {
         text-align: left;
         border-radius: 8px;
         background-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .nav-link svg {
+        width: 20px;
+        height: 20px;
     }
     .nav-link::after {
         display: none;
@@ -718,6 +834,21 @@ section {
         width: 18px;
         height: 18px;
     }
+    .social-link img {
+        width: 18px;
+        height: 18px;
+    }
+    .qr-codes-grid {
+        max-width: 240px;
+        gap: 10px;
+    }
+    .qr-code-image {
+        width: 70px;
+        height: 70px;
+    }
+    .qr-code-label {
+        font-size: 0.7rem;
+    }
 }
 
 
@@ -758,6 +889,12 @@ section {
     .nav-toggle span {
         width: 26px;
         height: 3px;
+    }
+    .nav-shopee-btn {
+        right: 15px;
+        width: 32px;
+        height: 32px;
+        padding: 6px;
     }
     .nav-menu {
         top: 64px;
@@ -806,5 +943,20 @@ section {
     .social-link svg {
         width: 16px;
         height: 16px;
+    }
+    .social-link img {
+        width: 16px;
+        height: 16px;
+    }
+    .qr-codes-grid {
+        max-width: 200px;
+        gap: 8px;
+    }
+    .qr-code-image {
+        width: 60px;
+        height: 60px;
+    }
+    .qr-code-label {
+        font-size: 0.65rem;
     }
 }

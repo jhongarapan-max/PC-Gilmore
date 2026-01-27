@@ -48,6 +48,18 @@ async function loadProductsFromGoogleSheets() {
 
         // Parse the CSV response
         productsData = parseCSVData(csvText);
+        
+        // Debug: Check if we have products with Google Drive images
+        const driveImages = productsData.filter(p => 
+            (p.image && p.image.includes('drive.google.com')) || 
+            (p.images && p.images.includes('drive.google.com'))
+        );
+        if (driveImages.length > 0) {
+            console.log(`[Products Loader] Found ${driveImages.length} products with Google Drive images`);
+            driveImages.forEach(p => {
+                console.log(`  - ${p.name}: image="${p.image}", images="${p.images}"`);
+            });
+        }
 
         // Render products
         renderProducts(productsData);
@@ -271,10 +283,158 @@ function renderProducts(products) {
 }
 
 /* ============================================
+   Handle Google Drive Image Loading Errors
+   Tries alternative URL formats if the first one fails
+   ============================================ */
+function handleGoogleDriveImageError(imgElement) {
+    const originalSrc = imgElement.getAttribute('data-original-image') || imgElement.src;
+    const productName = imgElement.alt || 'Product';
+    
+    console.warn(`[Google Drive] Image failed to load: ${originalSrc}`);
+    
+    // Extract file ID from the URL
+    let fileId = null;
+    const patterns = [
+        /drive\.google\.com\/.*[\/?]id=([a-zA-Z0-9_-]+)/,
+        /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/,
+        /drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/
+    ];
+    
+    for (const pattern of patterns) {
+        const match = originalSrc.match(pattern);
+        if (match && match[1]) {
+            fileId = match[1];
+            break;
+        }
+    }
+    
+    if (fileId) {
+        // Try alternative URL formats
+        const alternativeUrls = [
+            `https://drive.google.com/uc?export=view&id=${fileId}`,
+            `https://drive.google.com/uc?export=download&id=${fileId}`,
+            `https://drive.google.com/thumbnail?id=${fileId}&sz=w800-h600`
+        ];
+        
+        // Check if we've already tried formats (stored in data attribute)
+        const triedFormats = parseInt(imgElement.getAttribute('data-tried-formats') || '0');
+        
+        if (triedFormats < alternativeUrls.length) {
+            const nextUrl = alternativeUrls[triedFormats];
+            console.log(`[Google Drive] Trying alternative format ${triedFormats + 1}: ${nextUrl}`);
+            imgElement.setAttribute('data-tried-formats', (triedFormats + 1).toString());
+            imgElement.src = nextUrl;
+            return; // Don't show placeholder yet, try the alternative
+        }
+    }
+    
+    // If all formats failed, show placeholder
+    console.error(`[Google Drive] All URL formats failed for: ${productName}`);
+    imgElement.src = `https://placehold.co/400x300/8B1A1A/F5F0E8?text=${encodeURIComponent(productName)}`;
+}
+
+/* ============================================
+   Convert Google Drive Sharing Link to Direct Image URL
+   ============================================ */
+function convertGoogleDriveUrl(url) {
+    if (!url || typeof url !== 'string') return url || '';
+    
+    // Trim whitespace
+    url = url.trim();
+    
+    // Return empty string if URL is empty
+    if (url === '') return '';
+    
+    // Check if it's a Google Drive sharing link
+    // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+    // Also handles: https://drive.google.com/open?id=FILE_ID
+    // NOTE: The file must be shared publicly (Anyone with the link can view) for this to work
+    let fileId = null;
+    
+    // Pattern 1: /file/d/FILE_ID/ (most common format)
+    // Matches: https://drive.google.com/file/d/1ZDXm4J4uTNA4QZIgb1C--z6IIXbtMj05/view?usp=sharing
+    // Updated regex to capture file ID more reliably (handles dashes, underscores, alphanumeric)
+    const pattern1 = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+    const match1 = url.match(pattern1);
+    if (match1 && match1[1]) {
+        fileId = match1[1];
+    }
+    
+    // Pattern 2: /open?id=FILE_ID
+    if (!fileId) {
+        const pattern2 = /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/;
+        const match2 = url.match(pattern2);
+        if (match2 && match2[1]) {
+            fileId = match2[1];
+        }
+    }
+    
+    // Pattern 3: /uc?id=FILE_ID (already a direct link, but extract ID)
+    if (!fileId) {
+        const pattern3 = /drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/;
+        const match3 = url.match(pattern3);
+        if (match3 && match3[1]) {
+            fileId = match3[1];
+        }
+    }
+    
+    if (fileId) {
+        // Convert to direct image URL
+        // Use thumbnail endpoint which is more reliable for images
+        // This format works better than uc?export=view for publicly shared files
+        const directUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000-h1000`;
+        
+        console.log(`[Google Drive] Converting URL`);
+        console.log(`  Original: ${url.substring(0, 80)}${url.length > 80 ? '...' : ''}`);
+        console.log(`  File ID: ${fileId}`);
+        console.log(`  Direct URL: ${directUrl}`);
+        
+        return directUrl;
+    }
+    
+    // If not a Google Drive link, return as is
+    return url;
+}
+
+/* ============================================
    Create Product Card HTML
    ============================================ */
 function createProductCard(product) {
-    const imagesArray = product.images ? product.images.split(',').map(img => img.trim()) : [product.image];
+    // Debug: Log product data to see what we're getting
+    if (product.image && product.image.includes('drive.google.com')) {
+        console.log(`[Product Card] Product: ${product.name}`);
+        console.log(`[Product Card] Original image URL: ${product.image}`);
+    }
+    
+    // Get main image - check both 'image' and 'images' columns
+    let mainImage = product.image || '';
+    
+    // If main image is empty, try to get first image from images column
+    if (!mainImage && product.images) {
+        const imagesList = product.images.split(',').map(img => img.trim()).filter(img => img);
+        if (imagesList.length > 0) {
+            mainImage = imagesList[0];
+        }
+    }
+    
+    // Convert main image if it's a Google Drive link
+    const originalMainImage = mainImage;
+    mainImage = convertGoogleDriveUrl(mainImage);
+    
+    if (originalMainImage !== mainImage && originalMainImage.includes('drive.google.com')) {
+        console.log(`[Product Card] Converted image for ${product.name}: ${originalMainImage.substring(0, 50)}... -> ${mainImage}`);
+    }
+    
+    // Convert all images in the images array
+    const imagesArray = product.images 
+        ? product.images.split(',').map(img => convertGoogleDriveUrl(img.trim())).filter(img => img)
+        : (mainImage ? [mainImage] : []);
+    
+    // If images array is empty but we have a main image, use it
+    if (imagesArray.length === 0 && mainImage) {
+        imagesArray.push(mainImage);
+    }
+    
     const imagesJson = JSON.stringify(imagesArray);
     const categorySlug = product.category.toLowerCase().replace(/\s+/g, '-');
     const shopeeLink = product.shopee_link || product.shopee || product.shopee_link || '';
@@ -295,7 +455,12 @@ function createProductCard(product) {
              data-specs="${encodeURIComponent(specs)}">
             ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" onerror="this.src='https://placehold.co/400x300/8B1A1A/F5F0E8?text=${encodeURIComponent(product.name)}'">
+                <img src="${mainImage || 'https://placehold.co/400x300/8B1A1A/F5F0E8?text=' + encodeURIComponent(product.name)}" 
+                     alt="${product.name}" 
+                     loading="lazy"
+                     data-original-image="${mainImage}"
+                     onerror="handleGoogleDriveImageError(this)"
+                     onload="console.log('Image loaded successfully:', this.src)">
             </div>
             <div class="product-info">
                 <span class="product-category">${product.category}</span>
@@ -549,13 +714,13 @@ function openProductModal(card) {
 
     if (dataImages) {
         try {
-            currentProductImages = JSON.parse(dataImages);
+            currentProductImages = JSON.parse(dataImages).map(img => convertGoogleDriveUrl(img));
         } catch (e) {
             console.error('Error parsing product images:', e);
-            currentProductImages = [mainImageSrc];
+            currentProductImages = [convertGoogleDriveUrl(mainImageSrc)];
         }
     } else {
-        currentProductImages = [mainImageSrc];
+        currentProductImages = [convertGoogleDriveUrl(mainImageSrc)];
     }
     currentImageIndex = 0;
 
@@ -569,9 +734,11 @@ function openProductModal(card) {
     const modalInquireBtn = document.getElementById('modalInquireBtn');
     const modalThumbnails = document.getElementById('modalThumbnails');
 
-    if (image) {
+    if (image && currentProductImages[0]) {
         modalImage.src = currentProductImages[0];
         modalImage.alt = image.alt;
+        modalImage.setAttribute('data-original-image', currentProductImages[0]);
+        modalImage.setAttribute('onerror', 'handleGoogleDriveImageError(this)');
     }
 
     // Populate thumbnails
@@ -706,7 +873,10 @@ function updateModalImage() {
         // Add fade effect
         modalImage.style.opacity = '0';
         setTimeout(() => {
-            modalImage.src = currentProductImages[currentImageIndex];
+            const imageUrl = currentProductImages[currentImageIndex];
+            modalImage.src = imageUrl;
+            modalImage.setAttribute('data-original-image', imageUrl);
+            modalImage.setAttribute('onerror', 'handleGoogleDriveImageError(this)');
             modalImage.style.opacity = '1';
         }, 150);
     }
@@ -753,3 +923,4 @@ window.goToModalImage = goToModalImage;
 window.prevModalImage = prevModalImage;
 window.nextModalImage = nextModalImage;
 window.addProductToInquiry = addProductToInquiry;
+window.handleGoogleDriveImageError = handleGoogleDriveImageError;

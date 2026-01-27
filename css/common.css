@@ -203,7 +203,9 @@ a {
     transition: all var(--transition-speed);
 }
 
+
 /* Shopee Button for Mobile */
+
 .nav-shopee-btn {
     display: none;
     width: 40px;
@@ -387,7 +389,9 @@ section {
     color: var(--secondary-color);
 }
 
+
 /* Contact Info Section - Yellow styling (excluding address) */
+
 .footer-section:last-child li:not(:first-child) {
     color: #ffd700;
 }
@@ -451,7 +455,9 @@ section {
     border-radius: 4px;
 }
 
+
 /* QR Code Section */
+
 .qr-code-section {
     margin-top: 25px;
     text-align: center;
@@ -738,7 +744,7 @@ section {
     }
     .nav-menu li {
         width: 100%;
-        margin-bottom: 25px;
+        margin-bottom: 10px;
     }
     .nav-menu.active {
         transform: translateX(0);

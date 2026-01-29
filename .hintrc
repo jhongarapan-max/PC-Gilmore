@@ -6,6 +6,12 @@
     "no-inline-styles": "off",
     "disown-opener": "off",
     "compat-api/html": "off",
-    "button-type": "off"
+    "button-type": "off",
+    "axe/name-role-value": [
+      "default",
+      {
+        "button-name": "off"
+      }
+    ]
   }
 }

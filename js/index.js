@@ -8,7 +8,353 @@ document.addEventListener('DOMContentLoaded', function() {
     initParallaxEffect();
     initCounterAnimation();
     initServicesSlideshow();
+    initFeaturedProducts();
+    initHomeArticles();
 });
+
+/* ============================================
+   Featured Products (Homepage) - Google Sheets
+   ============================================ */
+function initFeaturedProducts() {
+    const grid = document.getElementById('featuredProductsGrid');
+    if (!grid) return;
+
+    loadFeaturedProducts(grid);
+}
+
+/* ============================================
+   Homepage Articles (from data/articles.json)
+   ============================================ */
+const ARTICLES_JSON_URL = 'data/articles.json';
+const HOME_ARTICLES_LIMIT = 3;
+
+function initHomeArticles() {
+    const grid = document.getElementById('homeArticlesGrid');
+    if (!grid) return;
+
+    loadHomeArticles(grid);
+}
+
+async function loadHomeArticles(grid) {
+    try {
+        const response = await fetch(ARTICLES_JSON_URL);
+        if (!response.ok) throw new Error('Failed to fetch articles');
+
+        const data = await response.json();
+        const list = Array.isArray(data) ? data : [];
+        const articles = list
+            .filter(a => a.slug && a.title)
+            .sort((a, b) => (b.dateSort || 0) - (a.dateSort || 0))
+            .slice(0, HOME_ARTICLES_LIMIT);
+
+        if (articles.length === 0) throw new Error('No articles');
+        grid.innerHTML = articles.map(createHomeArticleCard).join('');
+        grid.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('animated'));
+    } catch (e) {
+        console.error('[Homepage Articles] load failed:', e);
+        const fallback = getHomeSampleArticles();
+        grid.innerHTML = fallback.map(createHomeArticleCard).join('');
+        grid.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('animated'));
+    }
+}
+
+function createHomeArticleCard(article) {
+    const cover = article.cover_image ?
+        `<span class="article-card-cover"><img src="${escapeHtml(article.cover_image)}" alt="${escapeHtml(article.title)}"></span>` :
+        '<span class="article-card-cover"></span>';
+    return `
+        <div class="article-card animate-on-scroll">
+            ${cover}
+            <div class="article-card-body">
+                <div class="article-card-meta">${escapeHtml(article.dateDisplay || '—')}</div>
+                <h3 class="article-card-title">
+                    <a href="article.html?slug=${encodeURIComponent(article.slug)}">${escapeHtml(article.title)}</a>
+                </h3>
+                <p class="article-card-summary">${escapeHtml(article.summary || '')}</p>
+            </div>
+            <div class="article-card-footer">
+                <a class="article-readmore" href="article.html?slug=${encodeURIComponent(article.slug)}">Read more →</a>
+            </div>
+        </div>
+    `;
+}
+
+function getHomeSampleArticles() {
+    return [
+        { slug: 'how-to-choose-ram', title: 'How to Choose the Right RAM for Your PC', dateDisplay: 'Sample', dateSort: 0, summary: 'A quick guide to capacity, speed, and compatibility when upgrading memory.', cover_image: '' },
+        { slug: 'ssd-vs-hdd', title: 'SSD vs HDD: Which Storage Should You Buy?', dateDisplay: 'Sample', dateSort: 0, summary: 'Understand the difference in speed, price, and best use-cases.', cover_image: '' },
+        { slug: 'pc-building-tips', title: 'PC Building Tips for Beginners', dateDisplay: 'Sample', dateSort: 0, summary: 'Essential steps and common mistakes to avoid when building your first PC.', cover_image: '' }
+    ];
+}
+
+async function loadFeaturedProducts(grid) {
+    try {
+        // Same published CSV source used in products.js (keep consistent)
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRYYlyhEfnpRhDAuXL8xQ0LOPPR4wT-p4GfE1jKfU0U1Y_OmCYo8qjCRAOiG6BddvgSY1jVTv_APdm2/pubhtml';
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch products');
+
+        const csvText = await response.text();
+        const products = parseCSVData(csvText)
+            .map(normalizeProduct)
+            .filter(p => p.name);
+
+        // Only show products with badge Hot/Popular (case-insensitive)
+        const featured = products
+            .filter(p => isHotOrPopularBadge(p.badge))
+            .slice(0, 3); // show only 3 on homepage
+
+        if (featured.length === 0) throw new Error('No Hot/Popular products in sheet');
+
+        grid.innerHTML = featured.map(createHomepageProductCard).join('');
+        // Ensure cards are visible even if scroll observer already initialized
+        grid.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('animated'));
+    } catch (e) {
+        console.error('[Homepage Featured Products] load failed:', e);
+        const fallback = getHomepageSampleProducts();
+        grid.innerHTML = fallback
+            .filter(p => isHotOrPopularBadge(p.badge))
+            .slice(0, 3)
+            .map(createHomepageProductCard)
+            .join('');
+        grid.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('animated'));
+    }
+}
+
+function normalizeProduct(raw) {
+    const name = (raw.name || '').trim();
+    const category = (raw.category || '').trim();
+    const price = (raw.price || '').trim();
+    const description = (raw.description || '').trim();
+    const badge = (raw.badge || '').trim();
+
+    let image = (raw.image || '').trim();
+    let images = (raw.images || '').trim();
+
+    // If main image empty, use first from images list
+    if (!image && images) {
+        const list = images.split(',').map(s => s.trim()).filter(Boolean);
+        if (list.length) image = list[0];
+    }
+
+    return {
+        name,
+        category,
+        price,
+        description,
+        badge,
+        image: convertGoogleDriveUrl(image),
+        images: images ?
+            images.split(',').map(s => convertGoogleDriveUrl(s.trim())).filter(Boolean) :
+            (image ? [convertGoogleDriveUrl(image)] : [])
+    };
+}
+
+function createHomepageProductCard(product) {
+    const safeName = escapeHtml(product.name);
+    const safeCategory = escapeHtml(product.category || '');
+    const safePrice = escapeHtml(product.price || '');
+    const safeDesc = escapeHtml(product.description || '');
+
+    const shortDescription = safeDesc.length > 110 ? `${safeDesc.slice(0, 110)}...` : safeDesc;
+    const imgSrc = product.image || `https://placehold.co/600x400/8B1A1A/F5F0E8?text=${encodeURIComponent(product.name)}`;
+
+    const showBadge = isHotOrPopularBadge(product.badge);
+    return `
+        <div class="product-card animate-on-scroll">
+            ${showBadge ? `<div class="product-badge">${escapeHtml(product.badge)}</div>` : ''}
+            <div class="product-image">
+                <img
+                    src="${imgSrc}"
+                    alt="${safeName}"
+                    loading="lazy"
+                    data-original-image="${imgSrc}"
+                    onerror="homepageHandleImageError(this)"
+                >
+            </div>
+            <div class="product-info">
+                <span class="product-category">${safeCategory}</span>
+                <h4>${safeName}</h4>
+                <p>${shortDescription}</p>
+                ${safePrice ? `<div class="product-price">${safePrice}</div>` : ''}
+                <a href="products.html" class="btn btn-primary">View Product</a>
+            </div>
+        </div>
+    `;
+}
+
+function getHomepageSampleProducts() {
+    return [
+        {
+            name: 'Intel Core i9-14900K',
+            category: 'processors',
+            price: '₱34,999',
+            description: '24-Core, 32-Thread Desktop Processor',
+            badge: 'Popular',
+            image: 'assets/image/products/intel-i9-14900k.png',
+            images: ['assets/image/products/intel-i9-14900k.png']
+        },
+        {
+            name: 'NVIDIA RTX 4090',
+            category: 'graphics',
+            price: '₱109,999',
+            description: '24GB GDDR6X, Ultimate Gaming GPU',
+            badge: 'Hot',
+            image: 'assets/image/products/nvidia-rtx-4090.png',
+            images: ['assets/image/products/nvidia-rtx-4090.png']
+        },
+        {
+            name: 'Samsung 990 Pro 2TB',
+            category: 'storage',
+            price: '₱12,999',
+            description: 'NVMe M.2 SSD, 7450MB/s Read',
+            badge: 'Popular',
+            image: 'assets/image/products/samsung-990-pro.png',
+            images: ['assets/image/products/samsung-990-pro.png']
+        }
+    ];
+}
+
+function isHotOrPopularBadge(badge) {
+    const b = String(badge || '').trim().toLowerCase();
+    return b === 'hot' || b === 'popular';
+}
+
+function homepageHandleImageError(imgElement) {
+    const originalSrc = imgElement.getAttribute('data-original-image') || imgElement.src;
+    const productName = imgElement.alt || 'Product';
+
+    let fileId = null;
+    const patterns = [
+        /drive\.google\.com\/.*[\/?]id=([a-zA-Z0-9_-]+)/,
+        /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/,
+        /drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/
+    ];
+
+    for (const pattern of patterns) {
+        const match = originalSrc.match(pattern);
+        if (match && match[1]) {
+            fileId = match[1];
+            break;
+        }
+    }
+
+    if (fileId) {
+        const tried = parseInt(imgElement.getAttribute('data-tried-formats') || '0', 10);
+        const alternatives = [
+            `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000-h1000`,
+            `https://drive.google.com/uc?export=view&id=${fileId}`,
+            `https://drive.google.com/uc?export=download&id=${fileId}`
+        ];
+        if (tried < alternatives.length) {
+            imgElement.setAttribute('data-tried-formats', String(tried + 1));
+            imgElement.src = alternatives[tried];
+            return;
+        }
+    }
+
+    imgElement.src = `https://placehold.co/600x400/8B1A1A/F5F0E8?text=${encodeURIComponent(productName)}`;
+}
+
+function convertGoogleDriveUrl(url) {
+    if (!url || typeof url !== 'string') return url || '';
+    url = url.trim();
+    if (!url) return '';
+
+    let fileId = null;
+
+    const m1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m1 && m1[1]) fileId = m1[1];
+
+    if (!fileId) {
+        const m2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+        if (m2 && m2[1]) fileId = m2[1];
+    }
+
+    if (!fileId) {
+        const m3 = url.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/);
+        if (m3 && m3[1]) fileId = m3[1];
+    }
+
+    if (fileId) return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000-h1000`;
+    return url;
+}
+
+function parseCSVData(csvText) {
+    const rows = parseCSVRows(csvText);
+    if (rows.length < 2) return [];
+    const headers = rows[0].map(h => h.toLowerCase().replace(/\s+/g, '_'));
+    const items = [];
+
+    for (let i = 1; i < rows.length; i++) {
+        const values = rows[i];
+        const item = {};
+        headers.forEach((header, idx) => {
+            item[header] = values[idx] || '';
+        });
+        if (item.name && item.name.trim() !== '') items.push(item);
+    }
+    return items;
+}
+
+function parseCSVRows(csvText) {
+    const rows = [];
+    let currentRow = [];
+    let currentField = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i];
+        const nextChar = csvText[i + 1];
+
+        if (inQuotes) {
+            if (char === '"') {
+                if (nextChar === '"') {
+                    currentField += '"';
+                    i++;
+                } else {
+                    inQuotes = false;
+                }
+            } else {
+                currentField += char;
+            }
+        } else {
+            if (char === '"') {
+                inQuotes = true;
+            } else if (char === ',') {
+                currentRow.push(currentField.trim());
+                currentField = '';
+            } else if (char === '\n' || (char === '\r' && nextChar === '\n')) {
+                currentRow.push(currentField.trim());
+                if (currentRow.some(f => f !== '')) rows.push(currentRow);
+                currentRow = [];
+                currentField = '';
+                if (char === '\r') i++;
+            } else if (char !== '\r') {
+                currentField += char;
+            }
+        }
+    }
+
+    if (currentField || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        if (currentRow.some(f => f !== '')) rows.push(currentRow);
+    }
+
+    return rows;
+}
+
+function escapeHtml(str) {
+    return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// Make image error handler globally available for inline onerror
+window.homepageHandleImageError = homepageHandleImageError;
 
 /* ============================================
    Services Overview Carousel (center large, sides small)

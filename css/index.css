@@ -216,12 +216,50 @@
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card-row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2d2d2d 0%, #1f1f1f 100%);
+    transition: left 0.4s ease;
+    z-index: 0;
+}
+
+.feature-card-row:hover::before {
+    left: 0;
 }
 
 .feature-card-row:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    transform: translateY(-6px);
+}
+
+.feature-card-row .feature-card-icon,
+.feature-card-row .feature-card-body {
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s ease;
+}
+
+.feature-card-row:hover .feature-card-icon {
+    background-color: #dc2626;
+    color: #fff;
+}
+
+.feature-card-row:hover .feature-card-body h3 {
+    color: #fff;
+}
+
+.feature-card-row:hover .feature-card-body p {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .feature-card-icon {

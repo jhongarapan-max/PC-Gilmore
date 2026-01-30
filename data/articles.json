@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "how-to-choose-ram",
+    "title": "How to Choose the Right RAM for Your PC",
+    "dateRaw": "2026-01-30",
+    "dateDisplay": "Jan 30, 2026",
+    "dateSort": 1769731200000,
+    "summary": "A quick guide to capacity, speed, and compatibility when upgrading memory.",
+    "content": "<p>Start with your <strong>motherboard and CPU</strong> support: check whether you need DDR4 or DDR5. Then pick the right capacity for your use-case.</p>\n<h2>Capacity</h2>\n<ul>\n<li><strong>8 GB</strong> – Light use, browsing, office.</li>\n<li><strong>16 GB</strong> – Gaming and most daily use.</li>\n<li><strong>32 GB or more</strong> – Heavy multitasking, content creation, or future-proofing.</li>\n</ul>\n<h2>Speed and timings</h2>\n<p>Faster RAM (e.g. 3200 MHz vs 2666 MHz) can help in games and some apps, but only if your CPU and board support it. Enable XMP/EXPO in the BIOS after installing.</p>\n<h2>Compatibility</h2>\n<p>Match the <strong>form factor</strong> (DIMM for desktop, SODIMM for laptop) and <strong>generation</strong> (DDR4 vs DDR5). Check your board’s QVL if you want to be sure.</p>\n<p>When in doubt, use the manufacturer’s configurator or ask at PC Gilmore—we’ll help you pick the right kit.</p>",
+    "cover_image": ""
+  },
+  {
+    "slug": "ssd-vs-hdd",
+    "title": "SSD vs HDD — Which Storage Should You Buy?",
+    "dateRaw": "2026-01-29",
+    "dateDisplay": "Jan 29, 2026",
+    "dateSort": 1769644800000,
+    "summary": "Understand the difference in speed, price, and best use-cases.",
+    "content": "<p><strong>SSDs</strong> are much faster for boot and apps; <strong>HDDs</strong> are cheaper for large storage. Many builds use both.</p>\n<h2>SSD (Solid State Drive)</h2>\n<ul>\n<li>Very fast load times and snappy system.</li>\n<li>No moving parts, so more durable and quiet.</li>\n<li>Best for: Windows, programs, games you play often.</li>\n<li>Cost: more per GB than HDD.</li>\n</ul>\n<h2>HDD (Hard Disk Drive)</h2>\n<ul>\n<li>Cheaper per GB, good for bulk storage.</li>\n<li>Slower; fine for backups, media, and archives.</li>\n<li>Best for: large files you don’t need to open every day.</li>\n</ul>\n<h2>Recommendation</h2>\n<p>Use an <strong>SSD for your main drive</strong> (at least 256 GB, ideally 500 GB or more) and add an <strong>HDD</strong> if you need lots of space for photos, videos, or backups. We can help you choose the right combo at PC Gilmore.</p>",
+    "cover_image": ""
+  }
+]

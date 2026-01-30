@@ -609,11 +609,61 @@
 }
 
 
-/* Articles section (homepage only) */
+/* Articles section (homepage only) - uses .articles-grid & .article-card from articles.css */
 
 .home-articles {
     padding: 90px 0;
-    background-color: white;
+    background-color: var(--secondary-color);
+}
+
+.home-articles .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.home-articles .section-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.home-articles .section-header h2 {
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.home-articles .section-header p {
+    color: #64748b;
+    margin-top: 8px;
+}
+
+.home-articles .articles-grid {
+    margin-bottom: 32px;
+}
+
+.home-articles .articles-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 24px;
+    min-height: 200px;
+}
+
+.home-articles .articles-empty .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--secondary-dark);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .products-preview {

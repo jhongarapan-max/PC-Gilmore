@@ -3,16 +3,12 @@
    Google Sheets (Published CSV) Integration
    ============================================ */
 
-// ✅ Configure this to your Google Sheet publish key (same concept as products.js)
-// From URL: https://docs.google.com/spreadsheets/d/e/<PUBLISH_KEY>/pub?output=csv
 const ARTICLES_GOOGLE_SHEET_PUBLISH_KEY = '2PACX-1vRYYlyhEfnpRhDAuXL8xQ0LOPPR4wT-p4GfE1jKfU0U1Y_OmCYo8qjCRAOiG6BddvgSY1jVTv_APdm2';
 
-// ✅ Set this to the GID of your "Articles" sheet tab (default placeholder)
-// Tip: open the sheet tab, look at URL: .../edit#gid=123456789
+// Set this to the GID of your "Articles" sheet tab (open the tab, check URL: .../edit#gid=123456789)
 const ARTICLES_SHEET_GID = '0';
 
-// In your sheet, use headers (row 1):
-// slug | title | date | summary | content | cover_image
+// In your sheet, use headers (row 1): slug | title | date | summary | content | cover_image
 
 let allArticles = [];
 
@@ -42,13 +38,10 @@ async function loadArticles() {
             .map(normalizeArticle)
             .filter(a => a.slug && a.title);
 
-        // Sort newest first if date provided
         allArticles.sort((a, b) => (b.dateSort || 0) - (a.dateSort || 0));
-
         renderArticles(allArticles);
     } catch (e) {
         console.error('[Articles] load failed:', e);
-        // On error, just show empty state (no sample articles)
         allArticles = [];
         renderArticles(allArticles);
     }
@@ -106,7 +99,7 @@ function initSearch() {
         }
 
         const filtered = allArticles.filter(a => {
-            const hay = `${a.title} ${a.summary} ${a.content}`.toLowerCase();
+            const hay = `${a.title} ${a.summary} ${a.content || ''}`.toLowerCase();
             return hay.includes(q);
         });
         renderArticles(filtered);
@@ -138,7 +131,6 @@ function normalizeArticle(raw) {
 function parseDate(dateRaw) {
     if (!dateRaw) return { display: '', sort: 0 };
 
-    // Supports YYYY-MM-DD or any Date.parse-able string
     const t = Date.parse(dateRaw);
     if (!Number.isFinite(t)) return { display: dateRaw, sort: 0 };
 
@@ -147,9 +139,6 @@ function parseDate(dateRaw) {
     return { display, sort: t };
 }
 
-/* ============================================
-   CSV Parsing (same behavior as products.js)
-   ============================================ */
 function parseCSVData(csvText) {
     const rows = parseCSVRows(csvText);
     if (rows.length < 2) return [];
@@ -214,28 +203,6 @@ function parseCSVRows(csvText) {
     }
 
     return rows;
-}
-
-function getSampleArticles() {
-    return [{
-            slug: 'how-to-choose-ram',
-            title: 'How to Choose the Right RAM for Your PC',
-            dateDisplay: 'Sample',
-            dateSort: 0,
-            summary: 'A quick guide to capacity, speed, and compatibility when upgrading memory.',
-            content: 'Start with your motherboard and CPU support (DDR4 vs DDR5). Then pick the right capacity for your use-case...',
-            cover_image: ''
-        },
-        {
-            slug: 'ssd-vs-hdd',
-            title: 'SSD vs HDD: Which Storage Should You Buy?',
-            dateDisplay: 'Sample',
-            dateSort: 0,
-            summary: 'Understand the difference in speed, price, and best use-cases.',
-            content: 'SSDs are much faster for boot and apps. HDDs are cheaper for large storage. Many builds use both...',
-            cover_image: ''
-        }
-    ];
 }
 
 function escapeHtml(str) {

@@ -21,7 +21,7 @@ async function loadArticle() {
 
     if (!slug) {
         if (titleEl) titleEl.textContent = 'Article not found';
-        if (contentEl) contentEl.innerHTML = `<p>Missing article slug.</p>`;
+        if (contentEl) contentEl.innerHTML = '<p>Missing article slug.</p>';
         return;
     }
 
@@ -36,7 +36,6 @@ async function loadArticle() {
         const article = items.find(a => a.slug === slug);
         if (!article) throw new Error('Article not found in sheet');
 
-        // Set page title
         document.title = `${article.title} | PC Gilmore`;
 
         if (titleEl) titleEl.textContent = article.title;
@@ -52,6 +51,8 @@ async function loadArticle() {
         if (coverEl && article.cover_image) {
             coverEl.innerHTML = `<img src="${escapeHtml(article.cover_image)}" alt="${escapeHtml(article.title)}">`;
             coverEl.style.display = 'block';
+        } else if (coverEl) {
+            coverEl.style.display = 'none';
         }
 
         if (contentEl) {
@@ -62,19 +63,19 @@ async function loadArticle() {
         if (titleEl) titleEl.textContent = 'Article not available';
         if (summaryEl) summaryEl.style.display = 'none';
         if (metaEl) metaEl.style.display = 'none';
-        if (contentEl) contentEl.innerHTML = `<p>We couldn't load this article right now. Please try again later.</p>`;
+        if (coverEl) coverEl.style.display = 'none';
+        if (contentEl) contentEl.innerHTML = '<p>We couldn\'t load this article right now. Please try again later.</p>';
     }
 }
 
 function renderContent(text) {
-    // Simple renderer:
-    // - blank line => paragraph break
-    // - lines starting with "- " => bullet list
-    // - lines starting with "## " => h2
-    // - lines starting with "### " => h3
+    // Simple renderer: blank line => paragraph, ## => h2, ### => h3, - => list, [image]path|alt[/image] => img
     const lines = String(text || '').split(/\r?\n/);
     const out = [];
     let listOpen = false;
+
+    // Match: [image]path[/image] or [image]path|alt text[/image]
+    const imageTagRe = /^\[image\]([^\|\]]+)(?:\|([^\]]*))?\[\/image\]$/i;
 
     function closeList() {
         if (listOpen) {
@@ -91,6 +92,22 @@ function renderContent(text) {
             continue;
         }
 
+        const imageMatch = line.match(imageTagRe);
+        if (imageMatch) {
+            closeList();
+            const path = imageMatch[1].trim();
+            const alt = (imageMatch[2] || '').trim() || 'Article image';
+            if (path) {
+                out.push('<figure class="article-inline-image">');
+                out.push(`<img src="${escapeHtml(path)}" alt="${escapeHtml(alt)}" loading="lazy">`);
+                if (imageMatch[2] && imageMatch[2].trim()) {
+                    out.push(`<figcaption>${escapeHtml(imageMatch[2].trim())}</figcaption>`);
+                }
+                out.push('</figure>');
+            }
+            continue;
+        }
+
         if (line.startsWith('### ')) {
             closeList();
             out.push(`<h3>${escapeHtml(line.replace(/^###\s+/, ''))}</h3>`);
@@ -103,12 +120,12 @@ function renderContent(text) {
             continue;
         }
 
-        if (line.startsWith('- ')) {
+        if (line.startsWith('- ') || line.startsWith('* ')) {
             if (!listOpen) {
                 out.push('<ul>');
                 listOpen = true;
             }
-            out.push(`<li>${escapeHtml(line.replace(/^-+\s+/, ''))}</li>`);
+            out.push(`<li>${escapeHtml(line.replace(/^[-*]\s+/, ''))}</li>`);
             continue;
         }
 
@@ -121,12 +138,12 @@ function renderContent(text) {
 }
 
 function normalizeArticle(raw) {
-    const slug = (raw.slug || '').trim();
-    const title = (raw.title || '').trim();
-    const dateRaw = (raw.date || '').trim();
-    const summary = (raw.summary || '').trim();
-    const content = (raw.content || '').trim();
-    const cover_image = (raw.cover_image || '').trim();
+    const slug = (raw.slug || raw.SLUG || '').trim();
+    const title = (raw.title || raw.TITLE || '').trim();
+    const dateRaw = (raw.date || raw.DATE || '').trim();
+    const summary = (raw.summary || raw.SUMMARY || '').trim();
+    const content = (raw.content || raw.CONTENT || '').trim();
+    const cover_image = (raw.cover_image || raw.coverimage || raw.cover || raw.image || '').trim();
 
     const dateInfo = parseDate(dateRaw);
 

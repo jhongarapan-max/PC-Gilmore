@@ -898,8 +898,48 @@
     .hero-title {
         font-size: 4rem;
     }
+    /* FIXED: Single column for tablets too - much better for iPad Pro */
+    .features-with-image {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 0 30px;
+    }
+    .features-store-image {
+        position: static;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .features-content .section-header {
+        text-align: center;
+    }
+    .features-content .section-header .section-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .features-content .section-header p {
+        text-align: center;
+    }
     .features-grid-2x2 {
+        grid-template-columns: 1fr;
         gap: 16px;
+    }
+    .feature-card-row {
+        padding: 22px 26px;
+        gap: 22px;
+    }
+    .feature-card-icon {
+        width: 54px;
+        height: 54px;
+    }
+    .feature-card-icon svg {
+        width: 27px;
+        height: 27px;
+    }
+    .feature-card-body h3 {
+        font-size: 1.1rem;
+    }
+    .feature-card-body p {
+        font-size: 0.9rem;
     }
     .services-content {
         grid-template-columns: 1fr;
@@ -920,6 +960,53 @@
     }
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet Portrait - iPad (1024x1366 and similar) */
+@media (max-width: 1024px) {
+    .features-with-image {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        padding: 0 30px;
+    }
+    .features-store-image {
+        position: static;
+        max-width: 650px;
+        margin: 0 auto;
+    }
+    .features-content .section-header {
+        text-align: center;
+    }
+    .features-content .section-header .section-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .features-content .section-header p {
+        text-align: center;
+    }
+    .features-grid-2x2 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .feature-card-row {
+        padding: 22px 26px;
+        gap: 22px;
+    }
+    .feature-card-icon {
+        width: 54px;
+        height: 54px;
+    }
+    .feature-card-icon svg {
+        width: 27px;
+        height: 27px;
+    }
+    .feature-card-body h3 {
+        font-size: 1.08rem;
+    }
+    .feature-card-body p {
+        font-size: 0.9rem;
+        line-height: 1.5;
     }
 }
 
@@ -971,6 +1058,10 @@
     }
     .features-content .section-header {
         text-align: center;
+    }
+    .features-content .section-header .section-divider {
+        margin-left: auto;
+        margin-right: auto;
     }
     .features-content .section-header p {
         text-align: center;
@@ -1093,30 +1184,43 @@
     .features-cards-panel {
         padding: 18px;
     }
+    /* FIXED: Single column layout for mobile - much more user-friendly */
     .features-grid-2x2 {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 14px;
     }
+    /* FIXED: Larger, more readable cards on mobile */
     .feature-card-row {
-        padding: 16px 18px;
-        gap: 16px;
+        padding: 20px;
+        gap: 18px;
     }
     .feature-card-icon {
-        width: 46px;
-        height: 46px;
-        border-radius: 10px;
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
     }
     .feature-card-icon svg {
-        width: 22px;
-        height: 22px;
+        width: 26px;
+        height: 26px;
     }
     .feature-card-body h3 {
-        font-size: 0.95rem;
-        margin-bottom: 4px;
+        font-size: 1.05rem;
+        margin-bottom: 6px;
     }
     .feature-card-body p {
-        font-size: 0.8rem;
-        line-height: 1.4;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    /* FIXED: Center the section divider on mobile */
+    .features-content .section-header {
+        text-align: center;
+    }
+    .features-content .section-header .section-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .features-content .section-header p {
+        text-align: center;
     }
     .services-text {
         padding-right: 0;

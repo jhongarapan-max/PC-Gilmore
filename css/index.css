@@ -1,5 +1,5 @@
 /* ============================================
-   PC GILMORE - Landing Page Styles
+   PC GILMORE - Landing Page Styles (IMPROVED RESPONSIVE)
    CSS ONLY - Do not add HTML to this file.
    ============================================ */
 
@@ -216,50 +216,15 @@
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s ease;
+    transition: none;
     position: relative;
-    overflow: hidden;
-}
-
-.feature-card-row::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #2d2d2d 0%, #1f1f1f 100%);
-    transition: left 0.4s ease;
-    z-index: 0;
-}
-
-.feature-card-row:hover::before {
-    left: 0;
-}
-
-.feature-card-row:hover {
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-    transform: translateY(-6px);
+    cursor: default;
+    user-select: none;
 }
 
 .feature-card-row .feature-card-icon,
 .feature-card-row .feature-card-body {
     position: relative;
-    z-index: 1;
-    transition: all 0.4s ease;
-}
-
-.feature-card-row:hover .feature-card-icon {
-    background-color: #dc2626;
-    color: #fff;
-}
-
-.feature-card-row:hover .feature-card-body h3 {
-    color: #fff;
-}
-
-.feature-card-row:hover .feature-card-body p {
-    color: rgba(255, 255, 255, 0.9);
 }
 
 .feature-card-icon {
@@ -613,31 +578,6 @@
     right: -70px;
 }
 
-@media (max-width: 768px) {
-    .services-carousel-nav-btn {
-        opacity: 1;
-        pointer-events: auto;
-        width: 40px;
-        height: 40px;
-    }
-    .services-carousel-nav-btn--prev {
-        left: 10px;
-    }
-    .services-carousel-nav-btn--next {
-        right: 10px;
-    }
-    .image-lightbox-nav--prev {
-        left: 10px;
-    }
-    .image-lightbox-nav--next {
-        right: 10px;
-    }
-    .image-lightbox-close {
-        top: 10px;
-        right: 10px;
-    }
-}
-
 
 /* Featured Products Section */
 
@@ -869,381 +809,504 @@
 }
 
 
-/* Responsive Styles */
+/* ============================================
+   RESPONSIVE STYLES - IMPROVED
+   ============================================ */
 
 
-/* Tablet Landscape */
+/* Large Tablets & Small Desktops (1200px and below) */
+@media (max-width: 1200px) {
+    .features-grid-2x2 {
+        gap: 18px;
+    }
+    
+    .feature-card-row {
+        padding: 22px 24px;
+        gap: 20px;
+    }
+    
+    .feature-card-body h3 {
+        font-size: 1.05rem;
+    }
+    
+    .feature-card-body p {
+        font-size: 0.88rem;
+    }
+}
 
-@media (max-width: 992px) {
+
+/* Tablet Landscape (992px to 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
     .hero-inner {
         flex-direction: column;
         gap: 40px;
-        padding: 0 24px;
+        padding: 0 30px;
     }
+    
     .hero-content {
         max-width: 100%;
         text-align: center;
         padding: 0;
     }
+    
     .hero-image {
-        max-width: 100%;
+        max-width: 80%;
         order: -1;
     }
+    
     .hero-cta {
         justify-content: center;
     }
-    .hero-welcome {
-        font-size: 1.3rem;
-    }
+    
     .hero-title {
-        font-size: 4rem;
+        font-size: 4.2rem;
     }
-    /* FIXED: Single column for tablets too - much better for iPad Pro */
+    
+    /* IMPROVED: Keep 2x2 grid on tablets in landscape mode */
     .features-with-image {
         grid-template-columns: 1fr;
         gap: 40px;
         padding: 0 30px;
     }
+    
     .features-store-image {
         position: static;
         max-width: 700px;
         margin: 0 auto;
     }
+    
     .features-content .section-header {
         text-align: center;
     }
+    
     .features-content .section-header .section-divider {
         margin-left: auto;
         margin-right: auto;
     }
+    
     .features-content .section-header p {
         text-align: center;
     }
+    
     .features-grid-2x2 {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        max-width: 900px;
+        margin: 0 auto;
     }
+    
     .feature-card-row {
-        padding: 22px 26px;
-        gap: 22px;
+        padding: 26px;
+        gap: 20px;
+        flex-direction: column;
+        text-align: center;
+        min-height: 200px;
     }
+    
     .feature-card-icon {
-        width: 54px;
-        height: 54px;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto;
     }
+    
     .feature-card-icon svg {
-        width: 27px;
-        height: 27px;
+        width: 32px;
+        height: 32px;
     }
+    
+    .feature-card-body {
+        text-align: center;
+    }
+    
     .feature-card-body h3 {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
+        margin-bottom: 10px;
     }
+    
     .feature-card-body p {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
+    
     .services-content {
         grid-template-columns: 1fr;
         gap: 40px;
     }
-    .services-text {
-        padding-right: 0;
-    }
-    .services-image-container {
-        max-width: 100%;
-        margin: 0 auto;
-    }
-    .services-image-container img {
-        height: 350px;
-    }
-    .services-carousel-track {
-        padding: 0 20px;
-    }
+    
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Tablet Portrait - iPad (1024x1366 and similar) */
-@media (max-width: 1024px) {
-    .features-with-image {
-        grid-template-columns: 1fr;
-        gap: 36px;
-        padding: 0 30px;
-    }
-    .features-store-image {
-        position: static;
-        max-width: 650px;
-        margin: 0 auto;
-    }
-    .features-content .section-header {
-        text-align: center;
-    }
-    .features-content .section-header .section-divider {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .features-content .section-header p {
-        text-align: center;
-    }
-    .features-grid-2x2 {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    .feature-card-row {
-        padding: 22px 26px;
-        gap: 22px;
-    }
-    .feature-card-icon {
-        width: 54px;
-        height: 54px;
-    }
-    .feature-card-icon svg {
-        width: 27px;
-        height: 27px;
-    }
-    .feature-card-body h3 {
-        font-size: 1.08rem;
-    }
-    .feature-card-body p {
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-}
 
-
-/* Tablet Portrait */
-
+/* Tablet Portrait (768px and below) */
 @media (max-width: 768px) {
     .hero {
         min-height: 0;
         padding: 150px 0 100px;
     }
+    
     .hero-welcome {
         font-size: 1.1rem;
         letter-spacing: 1px;
     }
+    
     .hero-title {
         font-size: 2.8rem;
     }
+    
     .hero-subtitle {
         font-size: 1rem;
     }
+    
     .hero-inner {
         flex-direction: column;
         padding: 0 20px;
     }
+    
     .hero-content {
         max-width: 100%;
         text-align: center;
     }
+    
     .hero-image {
         max-width: 100%;
         order: -1;
     }
+    
     .hero-cta {
         justify-content: center;
     }
+    
+    /* IMPROVED: 2 column grid on portrait tablets for better use of space */
     .features-with-image {
         grid-template-columns: 1fr;
         gap: 32px;
         padding: 0 20px;
     }
+    
     .features-cards-panel {
         padding: 22px;
     }
+    
     .features-store-image {
         position: static;
         max-width: 500px;
         margin: 0 auto;
     }
+    
     .features-content .section-header {
         text-align: center;
     }
+    
     .features-content .section-header .section-divider {
         margin-left: auto;
         margin-right: auto;
     }
+    
     .features-content .section-header p {
         text-align: center;
     }
+    
+    .features-grid-2x2 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .feature-card-row {
+        padding: 22px 18px;
+        gap: 16px;
+        flex-direction: column;
+        text-align: center;
+        min-height: 180px;
+    }
+    
+    .feature-card-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto;
+    }
+    
+    .feature-card-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .feature-card-body {
+        text-align: center;
+    }
+    
+    .feature-card-body h3 {
+        font-size: 1.05rem;
+        margin-bottom: 8px;
+    }
+    
+    .feature-card-body p {
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+    
     .features,
     .services-overview,
     .featured-products,
     .cta-section {
         padding: 60px 0;
     }
-    .features-grid-2x2 {
-        gap: 14px;
-    }
-    .feature-card-row {
-        padding: 20px 22px;
-        gap: 20px;
-    }
-    .feature-card-icon {
-        width: 50px;
-        height: 50px;
-    }
-    .feature-card-icon svg {
-        width: 24px;
-        height: 24px;
-    }
-    .feature-card-body h3 {
-        font-size: 1.05rem;
-    }
-    .feature-card-body p {
-        font-size: 0.85rem;
-        line-height: 1.5;
-    }
+    
     .products-preview {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
+    
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
+    
     .product-card .product-image {
         height: 150px;
     }
+    
     .product-card .product-image svg {
         width: 55px;
         height: 55px;
     }
+    
     .product-card .product-info {
         padding: 20px;
     }
+    
     .product-preview-image {
         height: 150px;
     }
+    
     .product-preview-image svg {
         width: 60px;
         height: 60px;
     }
+    
     .product-preview-info {
         padding: 20px;
     }
+    
     .cta-content h2 {
         font-size: 1.8rem;
     }
+    
     .cta-content p {
         font-size: 1rem;
     }
+    
     .services-text {
         padding-right: 0;
     }
+    
     .services-image-container img {
         height: 300px;
     }
+    
     .services-image-container {
         border-radius: 15px;
     }
+    
     .services-carousel-track {
         padding: 0 15px;
     }
+    
     .hero-cta .btn-hero-shop {
         width: 100%;
         max-width: 220px;
         text-align: center;
     }
+    
     .cta-buttons .btn {
         width: 100%;
         max-width: 220px;
     }
+    
     .social-link {
         width: 40px;
         height: 40px;
     }
+    
+    .services-carousel-nav-btn {
+        opacity: 1;
+        pointer-events: auto;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .services-carousel-nav-btn--prev {
+        left: 10px;
+    }
+    
+    .services-carousel-nav-btn--next {
+        right: 10px;
+    }
+    
+    .image-lightbox-nav--prev {
+        left: 10px;
+    }
+    
+    .image-lightbox-nav--next {
+        right: 10px;
+    }
+    
+    .image-lightbox-close {
+        top: 10px;
+        right: 10px;
+    }
 }
 
 
-/* Mobile */
-
+/* Mobile (480px and below) */
 @media (max-width: 480px) {
     .hero-welcome {
         font-size: 0.9rem;
         margin-bottom: 8px;
     }
+    
     .hero-title {
         font-size: 2.2rem;
     }
+    
     .hero-cta {
         flex-direction: column;
         align-items: center;
     }
+    
     .hero-cta .btn-hero-shop {
         width: 100%;
         max-width: 250px;
         text-align: center;
     }
+    
     .features-with-image {
         padding: 0 15px;
     }
+    
     .features-store-image {
         max-width: 100%;
     }
+    
     .features-cards-panel {
         padding: 18px;
     }
-    /* FIXED: Single column layout for mobile - much more user-friendly */
+    
+    /* IMPROVED: Single column on mobile for better readability */
     .features-grid-2x2 {
         grid-template-columns: 1fr;
         gap: 14px;
     }
-    /* FIXED: Larger, more readable cards on mobile */
+    
+    /* IMPROVED: Larger, more readable cards on mobile */
     .feature-card-row {
-        padding: 20px;
+        padding: 24px 20px;
         gap: 18px;
+        flex-direction: row;
+        text-align: left;
+        min-height: auto;
     }
+    
     .feature-card-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 12px;
+        width: 56px;
+        height: 56px;
+        margin: 0;
+        flex-shrink: 0;
     }
+    
     .feature-card-icon svg {
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
     }
+    
+    .feature-card-body {
+        text-align: left;
+        flex: 1;
+    }
+    
     .feature-card-body h3 {
-        font-size: 1.05rem;
+        font-size: 1.08rem;
         margin-bottom: 6px;
     }
+    
     .feature-card-body p {
-        font-size: 0.9rem;
+        font-size: 0.92rem;
         line-height: 1.5;
     }
-    /* FIXED: Center the section divider on mobile */
+    
     .features-content .section-header {
         text-align: center;
     }
+    
     .features-content .section-header .section-divider {
         margin-left: auto;
         margin-right: auto;
     }
+    
     .features-content .section-header p {
         text-align: center;
     }
+    
     .services-text {
         padding-right: 0;
     }
+    
     .services-image-container img {
         height: 250px;
         border-radius: 15px;
     }
+    
     .services-image-container {
         border-radius: 15px;
     }
+    
     .services-carousel-track {
         padding: 0 10px;
     }
+    
     .products-grid {
         grid-template-columns: 1fr;
     }
+    
     .cta-buttons {
         flex-direction: column;
         align-items: center;
     }
+    
     .cta-buttons .btn {
         width: 100%;
         max-width: 250px;
+    }
+}
+
+
+/* Very Small Mobile (360px and below) */
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: 1.9rem;
+    }
+    
+    .feature-card-row {
+        padding: 20px 16px;
+        gap: 16px;
+    }
+    
+    .feature-card-icon {
+        width: 52px;
+        height: 52px;
+    }
+    
+    .feature-card-icon svg {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .feature-card-body h3 {
+        font-size: 1rem;
+    }
+    
+    .feature-card-body p {
+        font-size: 0.88rem;
     }
 }

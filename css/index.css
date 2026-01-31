@@ -1008,6 +1008,12 @@
         margin: 0 auto;
     }
     
+    /* Reduce image height on tablet for better mobile experience */
+    .features-store-image img {
+        height: 400px;
+        object-fit: cover;
+    }
+    
     .features-content .section-header {
         text-align: center;
     }
@@ -1090,10 +1096,15 @@
         margin-right: auto;
     }
     
-    /* Center the section divider on tablet */
+    /* Center the section divider on tablet - override inline styles with !important */
     .services-text .section-divider {
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    .services-overview .section-divider {
+        margin-left: auto !important;
+        margin-right: auto !important;
     }
     
     .services-image {
@@ -1254,6 +1265,12 @@
         max-width: 100%;
     }
     
+    /* Significantly reduce image height on mobile for better UX */
+    .features-store-image img {
+        height: 300px;
+        object-fit: cover;
+    }
+    
     .features-cards-panel {
         padding: 18px;
     }
@@ -1332,10 +1349,15 @@
         text-align: center;
     }
     
-    /* Center the section divider on mobile */
+    /* Center the section divider on mobile - override inline styles with !important */
     .services-text .section-divider {
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    .services-overview .section-divider {
+        margin-left: auto !important;
+        margin-right: auto !important;
     }
     
     .services-image {
@@ -1446,6 +1468,12 @@
     
     .feature-card-body p {
         font-size: 0.88rem;
+    }
+    
+    /* Even smaller image height for very small screens */
+    .features-store-image img {
+        height: 250px;
+        object-fit: cover;
     }
     
     /* Carousel remains large even on very small screens */

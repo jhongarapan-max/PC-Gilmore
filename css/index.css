@@ -1090,6 +1090,12 @@
         margin-right: auto;
     }
     
+    /* Center the section divider on tablet */
+    .services-text .section-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
     .services-image {
         order: 2;
         width: 100%;
@@ -1324,6 +1330,12 @@
     
     .services-text > p {
         text-align: center;
+    }
+    
+    /* Center the section divider on mobile */
+    .services-text .section-divider {
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .services-image {

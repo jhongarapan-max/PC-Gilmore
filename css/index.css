@@ -1,5 +1,5 @@
 /* ============================================
-   PC GILMORE - Landing Page Styles (IMPROVED RESPONSIVE)
+   PC GILMORE - Landing Page Styles (MOBILE IMPROVED)
    CSS ONLY - Do not add HTML to this file.
    ============================================ */
 
@@ -353,7 +353,7 @@
 }
 
 
-/* Services image carousel (Complete PC Solutions) */
+/* Services image carousel (Complete PC Solutions) - IMPROVED FOR MOBILE */
 
 .services-carousel {
     position: relative;
@@ -862,7 +862,6 @@
         font-size: 4.2rem;
     }
     
-    /* IMPROVED: Keep 2x2 grid on tablets in landscape mode */
     .features-with-image {
         grid-template-columns: 1fr;
         gap: 40px;
@@ -933,6 +932,21 @@
         gap: 40px;
     }
     
+    /* IMPROVED: Larger carousel on tablet landscape */
+    .services-carousel-track {
+        height: 400px;
+        padding: 0 20px;
+    }
+    
+    .services-slide {
+        width: 85%;
+        max-width: 600px;
+    }
+    
+    .services-slide img {
+        max-height: 400px;
+    }
+    
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -978,7 +992,6 @@
         justify-content: center;
     }
     
-    /* IMPROVED: 2 column grid on portrait tablets for better use of space */
     .features-with-image {
         grid-template-columns: 1fr;
         gap: 32px;
@@ -1053,6 +1066,83 @@
         padding: 60px 0;
     }
     
+    /* TABLET SERVICES SECTION - CENTERED LAYOUT */
+    .services-content {
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+    }
+    
+    .services-text {
+        padding-right: 0;
+        order: 1;
+        text-align: center;
+    }
+    
+    .services-text h2 {
+        text-align: center;
+    }
+    
+    .services-text > p {
+        text-align: center;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .services-image {
+        order: 2;
+        width: 100%;
+    }
+    
+    .services-list {
+        text-align: left;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .services-text .btn {
+        margin: 0 auto;
+        display: inline-block;
+    }
+    
+    /* IMPROVED: Much larger carousel images on tablet portrait */
+    .services-carousel-track {
+        height: 420px;
+        padding: 0 10px;
+    }
+    
+    .services-slide {
+        width: 90%;
+        max-width: none;
+    }
+    
+    .services-slide img {
+        max-height: 420px;
+        border-radius: 16px;
+    }
+    
+    .services-slide.is-prev,
+    .services-slide.is-next {
+        display: none;
+    }
+    
+    .services-carousel-nav-btn {
+        opacity: 1;
+        pointer-events: auto;
+        width: 44px;
+        height: 44px;
+    }
+    
+    .services-carousel-nav-btn--prev {
+        left: 15px;
+    }
+    
+    .services-carousel-nav-btn--next {
+        right: 15px;
+    }
+    
     .products-preview {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
@@ -1097,22 +1187,6 @@
         font-size: 1rem;
     }
     
-    .services-text {
-        padding-right: 0;
-    }
-    
-    .services-image-container img {
-        height: 300px;
-    }
-    
-    .services-image-container {
-        border-radius: 15px;
-    }
-    
-    .services-carousel-track {
-        padding: 0 15px;
-    }
-    
     .hero-cta .btn-hero-shop {
         width: 100%;
         max-width: 220px;
@@ -1127,21 +1201,6 @@
     .social-link {
         width: 40px;
         height: 40px;
-    }
-    
-    .services-carousel-nav-btn {
-        opacity: 1;
-        pointer-events: auto;
-        width: 40px;
-        height: 40px;
-    }
-    
-    .services-carousel-nav-btn--prev {
-        left: 10px;
-    }
-    
-    .services-carousel-nav-btn--next {
-        right: 10px;
     }
     
     .image-lightbox-nav--prev {
@@ -1159,7 +1218,7 @@
 }
 
 
-/* Mobile (480px and below) */
+/* Mobile (480px and below) - SIGNIFICANTLY IMPROVED CAROUSEL */
 @media (max-width: 480px) {
     .hero-welcome {
         font-size: 0.9rem;
@@ -1193,13 +1252,11 @@
         padding: 18px;
     }
     
-    /* IMPROVED: Single column on mobile for better readability */
     .features-grid-2x2 {
         grid-template-columns: 1fr;
         gap: 14px;
     }
     
-    /* IMPROVED: Larger, more readable cards on mobile */
     .feature-card-row {
         padding: 24px 20px;
         gap: 18px;
@@ -1248,21 +1305,90 @@
         text-align: center;
     }
     
+    /* MOBILE SERVICES SECTION - CENTERED LAYOUT */
+    .services-content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
     .services-text {
         padding-right: 0;
+        order: 1;
+        text-align: center;
     }
     
-    .services-image-container img {
-        height: 250px;
-        border-radius: 15px;
+    .services-text h2 {
+        text-align: center;
     }
     
-    .services-image-container {
-        border-radius: 15px;
+    .services-text > p {
+        text-align: center;
     }
     
+    .services-image {
+        order: 2;
+        width: 100%;
+    }
+    
+    .services-list {
+        text-align: left;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .services-text .btn {
+        margin: 0 auto;
+        display: inline-block;
+    }
+    
+    /* MOBILE CAROUSEL - SIGNIFICANTLY IMPROVED */
     .services-carousel-track {
-        padding: 0 10px;
+        height: 500px; /* Increased from 300px */
+        padding: 0 5px;
+    }
+    
+    .services-slide {
+        width: 95%; /* Increased from 85% */
+        max-width: none;
+    }
+    
+    .services-slide img {
+        max-height: 500px; /* Increased from 300px */
+        border-radius: 12px;
+        object-fit: cover;
+    }
+    
+    /* Hide side slides on mobile for better focus */
+    .services-slide.is-prev,
+    .services-slide.is-next {
+        display: none;
+    }
+    
+    .services-carousel-nav-btn {
+        opacity: 1;
+        pointer-events: auto;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .services-carousel-nav-btn--prev {
+        left: 10px;
+    }
+    
+    .services-carousel-nav-btn--next {
+        right: 10px;
+    }
+    
+    .services-carousel-dots {
+        margin-top: 20px;
+        gap: 8px;
+    }
+    
+    .services-carousel-dot {
+        width: 12px;
+        height: 12px;
     }
     
     .products-grid {
@@ -1308,5 +1434,14 @@
     
     .feature-card-body p {
         font-size: 0.88rem;
+    }
+    
+    /* Carousel remains large even on very small screens */
+    .services-carousel-track {
+        height: 450px;
+    }
+    
+    .services-slide img {
+        max-height: 450px;
     }
 }

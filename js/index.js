@@ -131,11 +131,22 @@ function getHomeSampleArticles() {
     ];
 }
 
+// Same Google Sheets CSV URL as products.html (Products sheet)
+const PRODUCTS_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTHibla5KZj1UUjt3lhnNS0yHu2EPZFB4zes-Ku187LNPUOf7HUhUXMLuvIKOs_VNDpCXKwhffayvps/pub?gid=0&single=true&output=csv';
+const FEATURED_PRODUCTS_LIMIT = 8; /* show at least 5 products in carousel */
+
+function fetchWithTimeout(url, ms) {
+    return Promise.race([
+        fetch(url),
+        new Promise(function (_, reject) {
+            setTimeout(function () { reject(new Error('Timeout')); }, ms);
+        })
+    ]);
+}
+
 async function loadFeaturedProducts(grid) {
     try {
-        // Same published CSV source used in products.js (keep consistent)
-        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRYYlyhEfnpRhDAuXL8xQ0LOPPR4wT-p4GfE1jKfU0U1Y_OmCYo8qjCRAOiG6BddvgSY1jVTv_APdm2/pubhtml';
-        const response = await fetch(url);
+        const response = await fetchWithTimeout(PRODUCTS_SHEET_CSV_URL, 8000);
         if (!response.ok) throw new Error('Failed to fetch products');
 
         const csvText = await response.text();
@@ -143,33 +154,213 @@ async function loadFeaturedProducts(grid) {
             .map(normalizeProduct)
             .filter(p => p.name);
 
-        // Only show products with badge Hot/Popular (case-insensitive)
-        const featured = products
-            .filter(p => isHotOrPopularBadge(p.badge))
-            .slice(0, 3); // show only 3 on homepage
+        // Prefer products with Hot/Popular badge, then fill with first products from sheet (same as products.html)
+        const withBadge = products.filter(p => isHotOrPopularBadge(p.badge));
+        const featured = withBadge.length >= FEATURED_PRODUCTS_LIMIT
+            ? withBadge.slice(0, FEATURED_PRODUCTS_LIMIT)
+            : [...withBadge, ...products.filter(p => !isHotOrPopularBadge(p.badge))]
+                .slice(0, FEATURED_PRODUCTS_LIMIT);
 
-        if (featured.length === 0) throw new Error('No Hot/Popular products in sheet');
+        if (featured.length === 0) throw new Error('No products in sheet');
 
         grid.innerHTML = featured.map(createHomepageProductCard).join('');
-        // Ensure cards are visible even if scroll observer already initialized
         grid.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('animated'));
+        initFeaturedProductsCarousel();
     } catch (e) {
         console.error('[Homepage Featured Products] load failed:', e);
         const fallback = getHomepageSampleProducts();
         grid.innerHTML = fallback
-            .filter(p => isHotOrPopularBadge(p.badge))
-            .slice(0, 3)
+            .slice(0, FEATURED_PRODUCTS_LIMIT)
             .map(createHomepageProductCard)
             .join('');
         grid.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('animated'));
+        initFeaturedProductsCarousel();
     }
+}
+
+/* Featured products carousel: infinite loop + prev/next + autoplay */
+const FEATURED_CAROUSEL_AUTOPLAY_MS = 3500;
+
+function initFeaturedProductsCarousel() {
+    const carousel = document.querySelector('.featured-products-carousel');
+    const viewport = document.querySelector('.featured-products-viewport');
+    const track = document.getElementById('featuredProductsGrid');
+    const prevBtn = document.querySelector('.featured-products-prev');
+    const nextBtn = document.querySelector('.featured-products-next');
+    if (!carousel || !viewport || !track || !prevBtn || !nextBtn) return;
+
+    const cards = track.querySelectorAll('.product-card');
+    if (cards.length === 0) {
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+    }
+
+    /* Clone all cards and append for seamless infinite loop */
+    cards.forEach(function (card) {
+        track.appendChild(card.cloneNode(true));
+    });
+
+    const gap = 18;
+    function getScrollStep() {
+        const first = track.querySelector('.product-card');
+        var w = first ? first.offsetWidth : 0;
+        return (w > 0 ? w + gap : 218);
+    }
+
+    /* Width of one full set of cards (before clone); after clone track is 2x this */
+    var segmentWidth = Math.round(track.scrollWidth / 2);
+
+    var isResettingScroll = false;
+    function applyInfiniteScroll() {
+        if (isResettingScroll) return;
+        var left = viewport.scrollLeft;
+        /* When we've scrolled into the cloned segment, jump back so we're in the first segment */
+        if (left >= segmentWidth) {
+            isResettingScroll = true;
+            viewport.scrollLeft = left - segmentWidth;
+            isResettingScroll = false;
+        } else if (left < 0) {
+            isResettingScroll = true;
+            viewport.scrollLeft = left + segmentWidth;
+            isResettingScroll = false;
+        }
+    }
+
+    function updateNavState() {
+        var left = viewport.scrollLeft;
+        prevBtn.disabled = left <= 2;
+        nextBtn.disabled = false; /* infinite: next always allowed */
+    }
+
+    /* Smooth scroll animation (ease-in-out over duration) */
+    var scrollAnimationId = null;
+    function smoothScrollTo(targetLeft, durationMs) {
+        if (scrollAnimationId) cancelAnimationFrame(scrollAnimationId);
+        var startLeft = viewport.scrollLeft;
+        var distance = targetLeft - startLeft;
+        var startTime = null;
+        durationMs = durationMs || 500;
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            var elapsed = timestamp - startTime;
+            var progress = Math.min(elapsed / durationMs, 1);
+            var eased = easeInOutCubic(progress);
+            viewport.scrollLeft = startLeft + distance * eased;
+            if (progress < 1) {
+                scrollAnimationId = requestAnimationFrame(step);
+            } else {
+                scrollAnimationId = null;
+                applyInfiniteScroll();
+                updateNavState();
+            }
+        }
+        scrollAnimationId = requestAnimationFrame(step);
+    }
+
+    function goNext() {
+        var step = getScrollStep();
+        if (step <= 0) step = 218;
+        var target = viewport.scrollLeft + step;
+        smoothScrollTo(target, 550);
+    }
+
+    function goPrev() {
+        var left = viewport.scrollLeft;
+        if (left <= 2) {
+            smoothScrollTo(segmentWidth - viewport.clientWidth, 550);
+        } else {
+            var step = getScrollStep();
+            smoothScrollTo(viewport.scrollLeft - step, 550);
+        }
+    }
+
+    var autoplayTimer = null;
+    var isHovering = false;
+    var lastAutoplayTime = 0;
+
+    function runAutoplayTick() {
+        if (isHovering) return;
+        goNext();
+    }
+
+    function startAutoplay() {
+        if (isHovering) return;
+        stopAutoplay();
+        lastAutoplayTime = Date.now();
+        autoplayTimer = window.setInterval(function () {
+            runAutoplayTick();
+        }, FEATURED_CAROUSEL_AUTOPLAY_MS);
+    }
+
+    function stopAutoplay() {
+        if (autoplayTimer) {
+            window.clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+    }
+
+    viewport.addEventListener('scroll', throttle(function () {
+        applyInfiniteScroll();
+        updateNavState();
+    }, 50));
+
+    prevBtn.addEventListener('click', function () {
+        if (prevBtn.disabled) return;
+        goPrev();
+        startAutoplay();
+    });
+    nextBtn.addEventListener('click', function () {
+        goNext();
+        startAutoplay();
+    });
+    if ('onscrollend' in viewport) {
+        viewport.addEventListener('scrollend', function () {
+            applyInfiniteScroll();
+            updateNavState();
+        });
+    }
+
+    carousel.addEventListener('mouseenter', function () {
+        isHovering = true;
+        stopAutoplay();
+    });
+    carousel.addEventListener('mouseleave', function () {
+        isHovering = false;
+        startAutoplay();
+    });
+
+    prevBtn.disabled = true;
+    nextBtn.disabled = false;
+    updateNavState();
+
+    /* Recompute segment width after layout; then start autoplay and fire first tick soon */
+    function readyAndStart() {
+        segmentWidth = Math.round(track.scrollWidth / 2);
+        updateNavState();
+        startAutoplay();
+    }
+
+    readyAndStart();
+    setTimeout(readyAndStart, 400);
+    /* First auto-advance after 1.5s so user sees the carousel move */
+    setTimeout(function () {
+        if (!isHovering && viewport.scrollWidth > viewport.clientWidth) {
+            runAutoplayTick();
+        }
+    }, 1500);
 }
 
 function normalizeProduct(raw) {
     const name = (raw.name || '').trim();
     const category = (raw.category || '').trim();
     const price = (raw.price || '').trim();
-    const description = (raw.description || '').trim();
+    const description = (raw.description || raw.full_description || raw.desc || '').trim();
     const badge = (raw.badge || '').trim();
 
     let image = (raw.image || '').trim();
@@ -255,6 +446,24 @@ function getHomepageSampleProducts() {
             badge: 'Popular',
             image: 'assets/image/products/samsung-990-pro.png',
             images: ['assets/image/products/samsung-990-pro.png']
+        },
+        {
+            name: 'AMD Ryzen 9 7950X',
+            category: 'processors',
+            price: '₱32,999',
+            description: '16-Core, 32-Thread Desktop Processor',
+            badge: '',
+            image: 'assets/image/products/amd-ryzen-9-7950x.png',
+            images: ['assets/image/products/amd-ryzen-9-7950x.png']
+        },
+        {
+            name: 'G.Skill Trident Z5 RGB 32GB',
+            category: 'memory',
+            price: '₱9,999',
+            description: 'DDR5-6000 CL30, RGB Lighting',
+            badge: '',
+            image: 'assets/image/products/gskill-trident.png',
+            images: ['assets/image/products/gskill-trident.png']
         }
     ];
 }

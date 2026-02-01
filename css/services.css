@@ -1,6 +1,5 @@
 /* ============================================
-   PC GILMORE - Services Page Styles (IMPROVED)
-   Added hover animations similar to index page feature cards
+   PC GILMORE - Services Page Styles
    ============================================ */
 
 
@@ -80,7 +79,7 @@
 }
 
 
-/* Compact Service Card (Horizontal) - IMPROVED WITH HOVER ANIMATION */
+/* Compact Service Card (Horizontal) */
 
 .service-card-compact {
     display: flex;
@@ -90,64 +89,13 @@
     border-radius: 12px;
     padding: 18px 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s ease;
+    transition: all var(--transition-speed);
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Dark gradient background animation - similar to index page feature cards */
-.service-card-compact::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #2d2d2d 0%, #1f1f1f 100%);
-    transition: left 0.4s ease;
-    z-index: 0;
-}
-
-.service-card-compact:hover::before {
-    left: 0;
 }
 
 .service-card-compact:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-}
-
-/* Ensure content stays above the background */
-.service-card-compact .service-icon-small,
-.service-card-compact .service-card-content,
-.service-card-compact .service-card-price {
-    position: relative;
-    z-index: 1;
-    transition: all 0.4s ease;
-}
-
-/* Icon color change on hover */
-.service-card-compact:hover .service-icon-small {
-    background: #dc2626;
-}
-
-/* Text color change on hover */
-.service-card-compact:hover .service-card-content h3 {
-    color: #fff;
-}
-
-.service-card-compact:hover .service-card-content p {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Price color change on hover */
-.service-card-compact:hover .service-card-price .price-from {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.service-card-compact:hover .service-card-price .price-amount {
-    color: #fff;
+    transform: translateX(8px);
+    box-shadow: 0 8px 30px rgba(0, 102, 255, 0.12);
 }
 
 .service-icon-small {
@@ -159,14 +107,12 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: all 0.4s ease;
 }
 
 .service-icon-small svg {
     width: 28px;
     height: 28px;
     color: var(--secondary-color);
-    transition: all 0.4s ease;
 }
 
 .service-card-content {
@@ -178,7 +124,6 @@
     font-size: 1.05rem;
     margin-bottom: 4px;
     color: var(--primary-color);
-    transition: all 0.4s ease;
 }
 
 .service-card-content p {
@@ -186,7 +131,6 @@
     font-size: 0.85rem;
     line-height: 1.4;
     margin: 0;
-    transition: all 0.4s ease;
 }
 
 .service-card-price {
@@ -201,14 +145,12 @@
     color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: all 0.4s ease;
 }
 
 .price-amount {
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--primary-color);
-    transition: all 0.4s ease;
 }
 
 

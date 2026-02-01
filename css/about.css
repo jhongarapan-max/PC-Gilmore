@@ -1,6 +1,5 @@
 /* ============================================
-   PC GILMORE - About Page Styles (CURSOR FIXED)
-   Fixed text cursor (I-beam) on hover - now uses default cursor
+   PC GILMORE - About Page Styles
    ============================================ */
 
 
@@ -137,7 +136,7 @@
 }
 
 
-/* Mission Vision Section - FIXED: No text cursor */
+/* Mission Vision Section */
 
 .mission-vision {
     padding: 100px 0;
@@ -158,8 +157,6 @@
     opacity: 0;
     transform: translateY(30px);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    cursor: default;
-    user-select: none;
 }
 
 .mv-card.animated {
@@ -200,7 +197,7 @@
 }
 
 
-/* Core Values Section - FIXED: No text cursor */
+/* Core Values Section */
 
 .core-values {
     padding: 100px 0;
@@ -223,8 +220,6 @@
     transform: translateY(30px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     transition: all var(--transition-speed);
-    cursor: default;
-    user-select: none;
 }
 
 .value-card.animated {
@@ -299,19 +294,6 @@
 .about-cta .btn-secondary:hover {
     background-color: var(--secondary-color);
     color: var(--primary-color);
-}
-
-
-/* Hover Effects for Mission/Vision Cards */
-
-.mv-card:nth-child(1):hover .mv-icon {
-    background-color: rgba(235, 11, 11, 0.747);
-    transition: background-color var(--transition-speed);
-}
-
-.mv-card:nth-child(2):hover .mv-icon {
-    background-color: rgba(20, 85, 224, 0.856);
-    transition: background-color var(--transition-speed);
 }
 
 
@@ -535,4 +517,15 @@
         width: 100%;
         max-width: 220px;
     }
+}
+
+
+.mv-card:nth-child(1):hover .mv-icon {
+    background-color: rgba(235, 11, 11, 0.747);
+    transition: background-color var(--transition-speed);
+}
+
+.mv-card:nth-child(2):hover .mv-icon {
+    background-color: rgba(20, 85, 224, 0.856);
+    transition: background-color var(--transition-speed);
 }

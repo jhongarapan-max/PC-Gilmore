@@ -12,28 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* ============================================
-   Product Selection Toggle
+   Custom Quantity Toggle
    ============================================ */
-function toggleProductFields(selectElement) {
-    const productValue = selectElement.value;
-    const computersQuantityGroup = document.getElementById('computersQuantityGroup');
-    const numComputersSelect = document.getElementById('numComputers');
-    const customQuantityGroup = document.getElementById('customQuantityGroup');
-    const customQuantityInput = document.getElementById('customQuantity');
-
-    if (productValue === 'Computers') {
-        computersQuantityGroup.style.display = 'block';
-        numComputersSelect.required = true;
-    } else {
-        computersQuantityGroup.style.display = 'none';
-        numComputersSelect.required = false;
-        numComputersSelect.value = '';
-        customQuantityGroup.style.display = 'none';
-        customQuantityInput.required = false;
-        customQuantityInput.value = '';
-    }
-}
-
 function toggleCustomQuantity(selectElement) {
     const customQuantityGroup = document.getElementById('customQuantityGroup');
     const customQuantityInput = document.getElementById('customQuantity');
@@ -49,9 +29,8 @@ function toggleCustomQuantity(selectElement) {
 }
 
 function initCustomQuantityToggle() {
-    // Make toggle functions available globally
+    // Make toggleCustomQuantity available globally
     window.toggleCustomQuantity = toggleCustomQuantity;
-    window.toggleProductFields = toggleProductFields;
 }
 
 /* ============================================
@@ -211,25 +190,14 @@ function initFormPersistence() {
             if (data.contactNumber) form.contactNumber.value = data.contactNumber;
             if (data.email) form.email.value = data.email;
             if (data.address) form.address.value = data.address;
-            if (data.product) {
-                const productSelect = document.getElementById('product');
-                if (productSelect) {
-                    productSelect.value = data.product;
-                    toggleProductFields(productSelect);
-                }
-            }
-            if (data.numComputers) {
-                const numComputersSelect = document.getElementById('numComputers');
-                if (numComputersSelect) {
-                    numComputersSelect.value = data.numComputers;
-                    if (data.numComputers === 'more') {
-                        toggleCustomQuantity({ value: 'more' });
-                    }
-                }
-            }
+            if (data.numComputers) form.numComputers.value = data.numComputers;
             if (data.customQuantity) {
                 const customInput = document.getElementById('customQuantity');
                 if (customInput) customInput.value = data.customQuantity;
+                // Ensure custom quantity group is visible if needed
+                if (data.numComputers === 'more') {
+                    toggleCustomQuantity({ value: 'more' });
+                }
             }
             if (data.orderDetails) {
                 const orderDetailsTextarea = document.getElementById('orderDetails');
@@ -248,8 +216,7 @@ function initFormPersistence() {
             contactNumber: form.contactNumber.value,
             email: form.email.value,
             address: form.address.value,
-            product: (document.getElementById('product') || {}).value || '',
-            numComputers: (document.getElementById('numComputers') || {}).value || '',
+            numComputers: form.numComputers.value,
             customQuantity: (document.getElementById('customQuantity') || {}).value || '',
             orderDetails: (document.getElementById('orderDetails') || {}).value || ''
         };
@@ -261,7 +228,7 @@ function initFormPersistence() {
     }
 
     // Save on input/change
-    const fieldsToWatch = ['fullName', 'contactNumber', 'email', 'address', 'product', 'numComputers', 'customQuantity', 'orderDetails'];
+    const fieldsToWatch = ['fullName', 'contactNumber', 'email', 'address', 'numComputers', 'customQuantity', 'orderDetails'];
     fieldsToWatch.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -319,12 +286,8 @@ function initContactForm() {
                 
                 showModal();
                 contactForm.reset();
-                // Reset product-related fields visibility
-                const computersQuantityGroup = document.getElementById('computersQuantityGroup');
+                // Reset custom quantity visibility
                 const customQuantityGroup = document.getElementById('customQuantityGroup');
-                if (computersQuantityGroup) {
-                    computersQuantityGroup.style.display = 'none';
-                }
                 if (customQuantityGroup) {
                     customQuantityGroup.style.display = 'none';
                 }
@@ -367,27 +330,9 @@ function validateForm(form) {
     const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
     let isValid = true;
 
-    // Check if product is selected and if it's Computers, validate numComputers
-    const productSelect = document.getElementById('product');
-    const numComputersSelect = document.getElementById('numComputers');
-    
-    if (productSelect && productSelect.value === 'Computers') {
-        if (!numComputersSelect || !numComputersSelect.value) {
-            isValid = false;
-            if (numComputersSelect) {
-                numComputersSelect.classList.add('error');
-            }
-        }
-    }
-
     inputs.forEach(input => {
         // Skip validation for hidden fields
         if (input.offsetParent === null) {
-            return;
-        }
-
-        // Skip numComputers if product is not Computers
-        if (input.id === 'numComputers' && productSelect && productSelect.value !== 'Computers') {
             return;
         }
 

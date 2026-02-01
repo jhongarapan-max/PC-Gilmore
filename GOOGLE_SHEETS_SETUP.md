@@ -16,6 +16,20 @@ In the first row (Row 1), add these column headers **exactly as shown**:
 |---|---|---|---|---|---|---|---|---|
 | name | category | price | description | badge | image | images | shopee | specs |
 
+### 📸 Using Google Drive Images (Recommended)
+
+Instead of storing images locally, you can use Google Drive:
+
+1. **Upload your product images to Google Drive**
+2. **Right-click the image** → **"Get link"** → Set to **"Anyone with the link can view"**
+3. **Copy the share link** (looks like: `https://drive.google.com/file/d/FILE_ID/view?usp=sharing`)
+4. **Paste it directly in the `image` or `images` column** in your spreadsheet
+5. The code will **automatically convert** it to a direct image URL!
+
+**Example:**
+- Google Drive share link: `https://drive.google.com/file/d/1a2b3c4d5e6f7g8h9i0j/view?usp=sharing`
+- Just paste it in the spreadsheet - no conversion needed!
+
 **Column descriptions:**
 
 - **name** - Product name (e.g., "Intel Core i9-14900K")
@@ -23,8 +37,11 @@ In the first row (Row 1), add these column headers **exactly as shown**:
 - **price** - Price with peso sign (e.g., "₱34,999")
 - **description** - Full product description (can be long, will be truncated on cards but shown fully in modal)
 - **badge** - Optional: "Popular", "New", "Best Seller", or leave empty
-- **image** - Main image path (e.g., "assets/image/products/intel-i9.png")
-- **images** - Comma-separated list of all image paths for gallery
+- **image** - Main image URL. Can be:
+  - Local path: `assets/image/products/intel-i9.png`
+  - Google Drive share link: `https://drive.google.com/file/d/FILE_ID/view?usp=sharing` (automatically converted)
+  - Direct image URL: `https://example.com/image.jpg`
+- **images** - Comma-separated list of all image URLs for gallery (same formats as above)
 - **shopee** - Shopee product link (e.g., "https://shopee.ph/product/123456")
 - **specs** - Product specifications separated by `|` (e.g., "24 Cores | 32 Threads | 5.8GHz Boost | LGA 1700")
 
@@ -138,9 +155,13 @@ Use these exact category slugs in the spreadsheet:
 
 ### Images not showing?
 
-1. Use local paths like: `assets/image/products/product-name.png`
-2. Make sure image files exist in that location
-3. Or use direct image URLs from the web
+1. **Local images**: Use paths like `assets/image/products/product-name.png` and make sure files exist
+2. **Google Drive images**: 
+   - Upload image to Google Drive
+   - Right-click → "Get link" → Set to "Anyone with the link can view"
+   - Copy the share link (e.g., `https://drive.google.com/file/d/FILE_ID/view?usp=sharing`)
+   - Paste it in the spreadsheet - it will automatically convert to a direct image URL
+3. **Direct URLs**: Use any direct image URL from the web (e.g., `https://example.com/image.jpg`)
 
 ### Still not working?
 

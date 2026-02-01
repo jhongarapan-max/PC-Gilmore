@@ -1,5 +1,5 @@
 /* ============================================
-   PC GILMORE - Contact Page Styles
+   PC GILMORE - Contact Page Styles (IMPROVED)
    ============================================ */
 
 
@@ -315,7 +315,7 @@
 }
 
 
-/* Contact Info */
+/* Contact Info - IMPROVED MODERN BACKGROUND */
 
 .contact-info-wrapper {
     opacity: 0;
@@ -330,21 +330,63 @@
 
 
 .contact-info-card {
-    background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(235, 11, 11, 0.747) 100%);
+    /* Modern gradient background with red and black tones */
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 35%, #2d0a0a 70%, #1a0a0a 100%);
     border-radius: 20px;
     padding: 50px;
     color: var(--secondary-color);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(220, 20, 20, 0.3);
+}
+
+/* Add a subtle overlay pattern for depth */
+.contact-info-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(220, 20, 20, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Add animated gradient accent */
+.contact-info-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #dc1414, #ff3333, #dc1414);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
 .contact-info-card h3 {
     color: var(--secondary-color);
     font-size: 1.5rem;
     margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
 }
 
 .contact-info-card>p {
     color: rgba(245, 240, 232, 0.8);
     margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
 }
 
 .contact-info-list {
@@ -352,6 +394,8 @@
     flex-direction: column;
     gap: 25px;
     margin-bottom: 35px;
+    position: relative;
+    z-index: 1;
 }
 
 .contact-info-item {
@@ -362,18 +406,26 @@
 .info-icon {
     width: 50px;
     height: 50px;
-    background-color: rgba(245, 240, 232, 0.15);
+    background: linear-gradient(135deg, rgba(220, 20, 20, 0.3) 0%, rgba(255, 51, 51, 0.15) 100%);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    border: 1px solid rgba(220, 20, 20, 0.4);
+    transition: all 0.3s ease;
+}
+
+.contact-info-item:hover .info-icon {
+    background: linear-gradient(135deg, rgba(220, 20, 20, 0.45) 0%, rgba(255, 51, 51, 0.3) 100%);
+    border-color: rgba(255, 51, 51, 0.6);
+    transform: scale(1.05);
 }
 
 .info-icon svg {
     width: 24px;
     height: 24px;
-    color: var(--secondary-color);
+    color: #ff4444;
 }
 
 .info-content h4 {
@@ -394,12 +446,14 @@
 }
 
 .info-content a:hover {
-    color: white;
+    color: #ff4444;
 }
 
 .social-section {
     padding-top: 25px;
     border-top: 1px solid rgba(245, 240, 232, 0.2);
+    position: relative;
+    z-index: 1;
 }
 
 .social-section h4 {
@@ -416,23 +470,25 @@
 .contact-info-card .social-link {
     width: 45px;
     height: 45px;
-    background-color: rgba(245, 240, 232, 0.15);
+    background: linear-gradient(135deg, rgba(220, 20, 20, 0.25) 0%, rgba(255, 51, 51, 0.1) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all var(--transition-speed);
+    border: 1px solid rgba(220, 20, 20, 0.4);
 }
 
 .contact-info-card .social-link:hover {
-    background-color: rgba(245, 240, 232, 0.25);
+    background: linear-gradient(135deg, rgba(220, 20, 20, 0.45) 0%, rgba(255, 51, 51, 0.3) 100%);
+    border-color: rgba(255, 51, 51, 0.6);
     transform: translateY(-3px);
 }
 
 .contact-info-card .social-link svg {
     width: 20px;
     height: 20px;
-    fill: var(--secondary-color);
+    fill: #ff4444;
 }
 
 

@@ -427,7 +427,9 @@
     min-height: 400px;
 }
 
+
 /* Modal Image Gallery */
+
 .modal-image-gallery {
     display: flex;
     flex-direction: column;
@@ -471,7 +473,9 @@
     display: block;
 }
 
+
 /* Gallery Navigation Arrows */
+
 .gallery-nav {
     position: absolute;
     top: 50%;
@@ -511,7 +515,9 @@
     right: 10px;
 }
 
+
 /* Thumbnails */
+
 .modal-thumbnails {
     display: flex;
     gap: 8px;
@@ -687,6 +693,15 @@
     color: white;
     border: none;
     transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.btn-shopee .btn-shopee-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    margin-right: 8px;
+    /* ensure visibility on orange background if logo is dark */
+    filter: brightness(0) invert(1);
 }
 
 .btn-shopee:hover {

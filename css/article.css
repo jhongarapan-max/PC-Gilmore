@@ -12,12 +12,15 @@
     overflow-x: hidden;
 }
 
+
+/* Article page header */
+
 .page-header.page-header--article {
     position: relative;
     width: 100%;
     max-width: 100vw;
     box-sizing: border-box;
-    background-color: var(--primary-color, #dc2626);
+    background-color: var(--primary-color);
     padding: 100px 0 48px;
     text-align: left;
 }
@@ -28,7 +31,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, transparent 50%);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
     pointer-events: none;
 }
 
@@ -37,6 +40,8 @@
     z-index: 1;
     max-width: 900px;
     width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
     box-sizing: border-box;
 }
 
@@ -67,17 +72,21 @@
     margin: 0;
 }
 
+
+/* Article body */
+
 .article-body {
     flex: 1;
     width: 100%;
     max-width: 100vw;
     box-sizing: border-box;
     padding: 0;
+    background-color: var(--secondary-color);
 }
 
 .article-cover {
-    width: 100vw;
-    max-width: 100%;
+    width: 100%;
+    max-width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
     margin-bottom: 0;
@@ -96,6 +105,9 @@
     object-position: center;
 }
 
+
+/* Content wrapper: article body injects into #articleContent; wrap in a container */
+
 .article-body>.article-content {
     max-width: 900px;
     margin: 0 auto;
@@ -111,6 +123,9 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+
+/* Article content typography */
 
 .article-content {
     font-size: 1.05rem;
@@ -148,12 +163,36 @@
 }
 
 .article-content a {
-    color: var(--primary-color, #dc2626);
+    color: var(--accent-color);
     text-decoration: none;
 }
 
 .article-content a:hover {
     text-decoration: underline;
+}
+
+
+/* Inline image: [image]path|alt[/image] in content */
+
+.article-content .article-inline-image {
+    margin: 24px 0;
+    text-align: center;
+}
+
+.article-content .article-inline-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.article-content .article-inline-image figcaption {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.4;
 }
 
 .article-footer {
@@ -175,6 +214,9 @@
     }
     .page-header.page-header--article h1 {
         font-size: 1.75rem;
+    }
+    .page-header.page-header--article .container {
+        padding: 0 20px;
     }
     .article-body>.article-content {
         padding: 32px 20px 24px;
@@ -199,6 +241,9 @@
     }
     .page-header.page-header--article h1 {
         font-size: 1.5rem;
+    }
+    .page-header.page-header--article .container {
+        padding: 0 16px;
     }
     .article-body>.article-content {
         padding: 24px 16px 20px;

@@ -271,7 +271,7 @@ function initFormPersistence() {
 }
 
 /* ============================================
-   Contact Form Handling with Web3Forms
+   Contact Form Handling with Facebook Messenger
    ============================================ */
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
@@ -290,53 +290,73 @@ function initContactForm() {
         submitBtn.disabled = true;
 
         // Prepare form data
-        const formData = new FormData(contactForm);
+        const fullName = document.getElementById('fullName').value;
+        const contactNumber = document.getElementById('contactNumber').value;
+        const email = document.getElementById('email').value;
+        const address = document.getElementById('address').value;
+        const product = document.getElementById('product').value;
+        const numComputers = document.getElementById('numComputers').value || '';
+        const customQuantity = document.getElementById('customQuantity').value || '';
+        const orderDetails = document.getElementById('orderDetails').value;
 
-        // Handle custom quantity
-        const numComputers = formData.get('numComputers');
-        const customQuantity = formData.get('customQuantity');
-
-        if (numComputers === 'more' && customQuantity) {
-            formData.set('numComputers', customQuantity);
+        // Build the message
+        let message = `Hello, I would like to request a quotation.\n\n`;
+        message += `**Customer Information:**\n`;
+        message += `Name: ${fullName}\n`;
+        message += `Contact Number: ${contactNumber}\n`;
+        message += `Email: ${email}\n`;
+        message += `Address: ${address}\n\n`;
+        message += `**Product Details:**\n`;
+        message += `Product: ${product}\n`;
+        
+        if (product === 'Computers' && numComputers) {
+            if (numComputers === 'more' && customQuantity) {
+                message += `Quantity: ${customQuantity} computers\n\n`;
+            } else {
+                message += `Quantity: ${numComputers} computer(s)\n\n`;
+            }
+        } else {
+            message += `\n`;
         }
+        
+        message += `**Order Details:**\n${orderDetails}`;
 
-        // Remove customQuantity from the form data as it's no longer needed
-        formData.delete('customQuantity');
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(message);
+
+        // Facebook Messenger URL with message parameter
+        const messengerUrl = `https://m.me/pcgilmoreph?text=${encodedMessage}`;
 
         try {
-            const response = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Clear inquiry products after successful submission
-                sessionStorage.removeItem('inquiryProducts');
-                // Clear saved contact form data
-                sessionStorage.removeItem('contactFormData');
-                
-                showModal();
-                contactForm.reset();
-                // Reset product-related fields visibility
-                const computersQuantityGroup = document.getElementById('computersQuantityGroup');
-                const customQuantityGroup = document.getElementById('customQuantityGroup');
-                if (computersQuantityGroup) {
-                    computersQuantityGroup.style.display = 'none';
-                }
-                if (customQuantityGroup) {
-                    customQuantityGroup.style.display = 'none';
-                }
-                // Hide inquiry banner
-                const banner = document.getElementById('productInquiryBanner');
-                if (banner) banner.style.display = 'none';
-            } else {
-                alert('Oops! Something went wrong. Please try again or contact us directly.');
+            // Clear inquiry products and form data after successful submission
+            sessionStorage.removeItem('inquiryProducts');
+            sessionStorage.removeItem('contactFormData');
+            
+            // Open Facebook Messenger in a new tab with the message pre-filled
+            window.open(messengerUrl, '_blank');
+            
+            // Show success modal
+            showModal();
+            
+            // Reset the form
+            contactForm.reset();
+            
+            // Reset product-related fields visibility
+            const computersQuantityGroup = document.getElementById('computersQuantityGroup');
+            const customQuantityGroup = document.getElementById('customQuantityGroup');
+            if (computersQuantityGroup) {
+                computersQuantityGroup.style.display = 'none';
             }
+            if (customQuantityGroup) {
+                customQuantityGroup.style.display = 'none';
+            }
+            
+            // Hide inquiry banner
+            const banner = document.getElementById('productInquiryBanner');
+            if (banner) banner.style.display = 'none';
         } catch (error) {
-            console.error('Form submission error:', error);
-            alert('Oops! Something went wrong. Please try again or contact us directly.');
+            console.error('Error opening messenger:', error);
+            alert('Unable to open Facebook Messenger. Please try again or visit our Facebook page directly.');
         } finally {
             submitBtn.classList.remove('loading');
             submitBtn.disabled = false;

@@ -246,6 +246,28 @@ a {
     font-size: 1rem;
 }
 
+
+/* Button icon helpers */
+
+.btn-hero-shop {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.btn-icon--shopee {
+    width: 22px;
+    height: 22px;
+}
+
 .btn-primary {
     background-color: var(--accent-color);
     color: var(--text-light);

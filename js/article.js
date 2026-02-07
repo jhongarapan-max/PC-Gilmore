@@ -49,14 +49,7 @@ async function loadArticle() {
         }
 
         if (coverEl && article.cover_image) {
-            const resolvedCover = resolveMediaUrl(article.cover_image, 'image');
-            if (resolvedCover && resolvedCover.type === 'img') {
-                coverEl.innerHTML = `<img src="${escapeHtml(resolvedCover.src)}" alt="${escapeHtml(article.title)}" data-original="${escapeHtml(article.cover_image)}">`;
-            } else if (resolvedCover && resolvedCover.type === 'iframe') {
-                coverEl.innerHTML = `<div class="video-wrap"><iframe src="${escapeHtml(resolvedCover.src)}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-original="${escapeHtml(article.cover_image)}"></iframe></div>`;
-            } else {
-                coverEl.innerHTML = `<img src="${escapeHtml(article.cover_image)}" alt="${escapeHtml(article.title)}" data-original="${escapeHtml(article.cover_image)}">`;
-            }
+            coverEl.innerHTML = `<img src="${escapeHtml(article.cover_image)}" alt="${escapeHtml(article.title)}">`;
             coverEl.style.display = 'block';
         } else if (coverEl) {
             coverEl.style.display = 'none';
@@ -64,7 +57,6 @@ async function loadArticle() {
 
         if (contentEl) {
             contentEl.innerHTML = renderContent(article.content);
-            attachMediaFallbacks(contentEl);
         }
     } catch (e) {
         console.error('[Article] load failed:', e);
@@ -77,13 +69,13 @@ async function loadArticle() {
 }
 
 function renderContent(text) {
-    // Simple renderer: blank line => paragraph, ## => h2, ### => h3, - => list, [image]path|alt[/image] => img, [video] => iframe
+    // Simple renderer: blank line => paragraph, ## => h2, ### => h3, - => list, [image]path|alt[/image] => img
     const lines = String(text || '').split(/\r?\n/);
     const out = [];
     let listOpen = false;
 
+    // Match: [image]path[/image] or [image]path|alt text[/image]
     const imageTagRe = /^\[image\]([^\|\]]+)(?:\|([^\]]*))?\[\/image\]$/i;
-    const videoTagRe = /^\[video\]([^\|\]]+)(?:\|([^\]]*))?\[\/video\]$/i;
 
     function closeList() {
         if (listOpen) {
@@ -100,27 +92,6 @@ function renderContent(text) {
             continue;
         }
 
-        // video tag
-        const videoMatch = line.match(videoTagRe);
-        if (videoMatch) {
-            closeList();
-            const path = videoMatch[1].trim();
-            const caption = (videoMatch[2] || '').trim();
-            if (path) {
-                out.push('<figure class="article-inline-video">');
-                const resolved = resolveMediaUrl(path, 'video');
-                if (resolved && resolved.type === 'iframe') {
-                    out.push(`<div class="video-wrap"><iframe src="${escapeHtml(resolved.src)}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-original="${escapeHtml(path)}"></iframe></div>`);
-                } else {
-                    out.push(`<p><a href="${escapeHtml(path)}" target="_blank" rel="noopener">Open video</a></p>`);
-                }
-                if (caption) out.push(`<figcaption>${escapeHtml(caption)}</figcaption>`);
-                out.push('</figure>');
-            }
-            continue;
-        }
-
-        // image tag
         const imageMatch = line.match(imageTagRe);
         if (imageMatch) {
             closeList();
@@ -128,14 +99,7 @@ function renderContent(text) {
             const alt = (imageMatch[2] || '').trim() || 'Article image';
             if (path) {
                 out.push('<figure class="article-inline-image">');
-                const resolved = resolveMediaUrl(path, 'image');
-                if (resolved && resolved.type === 'img') {
-                    out.push(`<img src="${escapeHtml(resolved.src)}" alt="${escapeHtml(alt)}" loading="lazy" data-original="${escapeHtml(path)}">`);
-                } else if (resolved && resolved.type === 'iframe') {
-                    out.push(`<div class="video-wrap"><iframe src="${escapeHtml(resolved.src)}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-original="${escapeHtml(path)}"></iframe></div>`);
-                } else {
-                    out.push(`<img src="${escapeHtml(path)}" alt="${escapeHtml(alt)}" loading="lazy">`);
-                }
+                out.push(`<img src="${escapeHtml(path)}" alt="${escapeHtml(alt)}" loading="lazy">`);
                 if (imageMatch[2] && imageMatch[2].trim()) {
                     out.push(`<figcaption>${escapeHtml(imageMatch[2].trim())}</figcaption>`);
                 }
@@ -277,113 +241,4 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-}
-
-// ---- Google Drive helpers ----
-function isDriveLink(url) {
-    return typeof url === 'string' && /drive\.google\.com/.test(url);
-}
-
-function extractDriveId(url) {
-    if (!url) return null;
-    // /d/FILE_ID/ pattern
-    let m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (m) return m[1];
-    // ?id=FILE_ID pattern
-    m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-    if (m) return m[1];
-    return null;
-}
-
-function driveImageUrl(id) {
-    return `https://drive.google.com/uc?export=view&id=${id}`;
-}
-
-function driveVideoPreviewUrl(id) {
-    return `https://drive.google.com/file/d/${id}/preview`;
-}
-
-function resolveMediaUrl(url, preferred) {
-    // preferred: 'image' or 'video'
-    try {
-        if (isDriveLink(url)) {
-            const id = extractDriveId(url);
-            if (!id) return { type: preferred === 'video' ? 'iframe' : 'img', src: url };
-            if (preferred === 'video') return { type: 'iframe', src: driveVideoPreviewUrl(id) };
-            // prefer image
-            return { type: 'img', src: driveImageUrl(id) };
-        }
-    } catch (e) {
-        return null;
-    }
-    // fallback: return original URL as img for images, iframe for video
-    if (preferred === 'video') return { type: 'iframe', src: url };
-    return { type: 'img', src: url };
-}
-
-// Attach runtime fallbacks for media that may be blocked by Drive sharing/CORS.
-function attachMediaFallbacks(container) {
-    try {
-        const root = container || document.getElementById('articleContent');
-        if (!root) return;
-
-        // Images: if load fails, replace with a link to the original Drive URL and a note.
-        const imgs = Array.from(root.querySelectorAll('img'));
-        imgs.forEach(img => {
-            let tries = 0;
-            const original = img.getAttribute('data-original') || img.src;
-
-            function tryFallback() {
-                tries++;
-                // First try: if we have a Drive share URL, try the `uc?export=view` form
-                if (tries === 1 && isDriveLink(original)) {
-                    const id = extractDriveId(original);
-                    if (id) {
-                        const alt = driveImageUrl(id);
-                        if (alt && alt !== img.src) {
-                            img.src = alt;
-                            return;
-                        }
-                    }
-                }
-
-                // Second try: attempt the download endpoint
-                if (tries === 2 && isDriveLink(original)) {
-                    const id = extractDriveId(original);
-                    if (id) {
-                        const alt2 = `https://drive.google.com/uc?export=download&id=${id}`;
-                        if (alt2 && alt2 !== img.src) {
-                            img.src = alt2;
-                            return;
-                        }
-                    }
-                }
-
-                // Final: mark as unavailable and show a non-clickable note (avoid forcing a link)
-                img.classList.add('media-unavailable');
-                const note = document.createElement('div');
-                note.className = 'media-unavailable-note';
-                note.textContent = 'Image unavailable — check Drive sharing permissions.';
-                if (img.parentNode && !img.parentNode.querySelector('.media-unavailable-note')) {
-                    img.parentNode.appendChild(note);
-                }
-            }
-
-            img.addEventListener('error', () => {
-                tryFallback();
-            });
-        });
-
-        // Iframes (videos): append an explicit open link below the iframe so users can open if embedding is blocked.
-        const iframes = Array.from(root.querySelectorAll('iframe'));
-        iframes.forEach(frame => {
-            const original = frame.getAttribute('data-original') || frame.src;
-            const link = document.createElement('p');
-            link.className = 'media-fallback-link';
-            link.innerHTML = `<a href="${escapeHtml(original)}" target="_blank" rel="noopener">Open video in a new tab</a>`;
-            if (frame.parentNode) frame.parentNode.insertBefore(link, frame.nextSibling);
-        });
-    } catch (e) {
-        // silent
-    }
 }

@@ -93,18 +93,30 @@ function handleProductInquiry() {
                     `Inquiring about (${inquiryProducts.length} products):`;
             }
 
-            // Display all products in the list with remove buttons
-            productList.innerHTML = inquiryProducts.map((product, index) =>
-                `<li>
-                    <span class="product-name">${product}</span>
-                    <button type="button" class="btn-remove-product" onclick="removeInquiryProduct(${index})" title="Remove product">
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </li>`
-            ).join('');
+            // Display all products in the list with remove buttons (SAFE: use DOM methods, avoid innerHTML)
+            productList.innerHTML = '';
+            inquiryProducts.forEach((product, index) => {
+                const li = document.createElement('li');
+
+                const span = document.createElement('span');
+                span.className = 'product-name';
+                span.textContent = product;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn-remove-product';
+                btn.title = 'Remove product';
+
+                // Static SVG icon inserted as innerHTML because it's trusted static markup
+                btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">\n                            <line x1="18" y1="6" x2="6" y2="18"></line>\n                            <line x1="6" y1="6" x2="18" y2="18"></line>\n                        </svg>';
+
+                // Attach event listener instead of inline onclick
+                btn.addEventListener('click', () => removeInquiryProduct(index));
+
+                li.appendChild(span);
+                li.appendChild(btn);
+                productList.appendChild(li);
+            });
 
             // Pre-fill the order details with all products ONLY if empty
             const orderDetailsTextarea = document.getElementById('orderDetails');

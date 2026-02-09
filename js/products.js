@@ -48,10 +48,10 @@ async function loadProductsFromGoogleSheets() {
 
         // Parse the CSV response
         productsData = parseCSVData(csvText);
-        
+
         // Debug: Check if we have products with Google Drive images
-        const driveImages = productsData.filter(p => 
-            (p.image && p.image.includes('drive.google.com')) || 
+        const driveImages = productsData.filter(p =>
+            (p.image && p.image.includes('drive.google.com')) ||
             (p.images && p.images.includes('drive.google.com'))
         );
         if (driveImages.length > 0) {
@@ -88,7 +88,7 @@ async function loadProductsFromGoogleSheets() {
 function parseCSVData(csvText) {
     // Parse CSV properly handling quoted multi-line fields
     const rows = parseCSVRows(csvText);
-    
+
     if (rows.length < 2) return [];
 
     // First row is headers
@@ -121,11 +121,11 @@ function parseCSVRows(csvText) {
     let currentRow = [];
     let currentField = '';
     let inQuotes = false;
-    
+
     for (let i = 0; i < csvText.length; i++) {
         const char = csvText[i];
         const nextChar = csvText[i + 1];
-        
+
         if (inQuotes) {
             if (char === '"') {
                 if (nextChar === '"') {
@@ -162,7 +162,7 @@ function parseCSVRows(csvText) {
             }
         }
     }
-    
+
     // Don't forget the last field and row
     if (currentField || currentRow.length > 0) {
         currentRow.push(currentField.trim());
@@ -170,7 +170,7 @@ function parseCSVRows(csvText) {
             rows.push(currentRow);
         }
     }
-    
+
     return rows;
 }
 
@@ -256,30 +256,119 @@ function getSampleProducts() {
 /* ============================================
    Render Products to Grid
    ============================================ */
+
 function renderProducts(products) {
     const productsGrid = document.querySelector('.products-grid');
     if (!productsGrid) return;
 
+    // Remove all children
+    productsGrid.innerHTML = '';
+
     if (products.length === 0) {
-        productsGrid.innerHTML = `
-            <div class="no-products">
-                <svg viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <h3>No products available</h3>
-                <p>Please check back later.</p>
-            </div>
+        const noProductsDiv = document.createElement('div');
+        noProductsDiv.className = 'no-products';
+        noProductsDiv.innerHTML = `
+            <svg viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <h3>No products available</h3>
+            <p>Please check back later.</p>
         `;
+        productsGrid.appendChild(noProductsDiv);
         return;
     }
 
-    productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
-    
+    products.forEach(product => {
+        productsGrid.appendChild(createProductCardSafe(product));
+    });
+
     // Show all products by default after rendering
     setTimeout(() => {
         filterProducts('all');
     }, 50);
+}
+
+// Safe DOM creation for product cards
+function createProductCardSafe(product) {
+    // ...existing code for image conversion and data extraction...
+    let mainImage = product.image || '';
+    if (!mainImage && product.images) {
+        const imagesList = product.images.split(',').map(img => img.trim()).filter(img => img);
+        if (imagesList.length > 0) {
+            mainImage = imagesList[0];
+        }
+    }
+    const originalMainImage = mainImage;
+    mainImage = convertGoogleDriveUrl(mainImage);
+    const imagesArray = product.images ?
+        product.images.split(',').map(img => convertGoogleDriveUrl(img.trim())).filter(img => img) :
+        (mainImage ? [mainImage] : []);
+    if (imagesArray.length === 0 && mainImage) {
+        imagesArray.push(mainImage);
+    }
+    const categorySlug = product.category.toLowerCase().replace(/\s+/g, '-');
+    const shopeeLink = product.shopee_link || product.shopee || product.shopee_link || '';
+    const specs = product.specs || product.specifications || product.spec || '';
+    const fullDescription = product.full_description || product.description || product.desc || '';
+    const shortDescription = product.description.length > 100 ?
+        product.description.substring(0, 100) + '...' :
+        product.description;
+
+    // Card root
+    const card = document.createElement('div');
+    card.className = 'product-card animate-on-scroll';
+    card.dataset.category = categorySlug;
+    card.setAttribute('data-images', JSON.stringify(imagesArray));
+    card.setAttribute('data-shopee', shopeeLink);
+    card.setAttribute('data-description', encodeURIComponent(fullDescription));
+    card.setAttribute('data-specs', encodeURIComponent(specs));
+
+    // Badge
+    if (product.badge) {
+        const badgeDiv = document.createElement('div');
+        badgeDiv.className = 'product-badge';
+        badgeDiv.textContent = product.badge;
+        card.appendChild(badgeDiv);
+    }
+
+    // Image
+    const imageDiv = document.createElement('div');
+    imageDiv.className = 'product-image';
+    const img = document.createElement('img');
+    img.src = mainImage || 'https://placehold.co/400x300/8B1A1A/F5F0E8?text=' + encodeURIComponent(product.name);
+    img.alt = product.name;
+    img.loading = 'lazy';
+    img.setAttribute('data-original-image', mainImage);
+    img.onerror = function() { handleGoogleDriveImageError(this); };
+    imageDiv.appendChild(img);
+    card.appendChild(imageDiv);
+
+    // Info
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'product-info';
+    const catSpan = document.createElement('span');
+    catSpan.className = 'product-category';
+    catSpan.textContent = product.category;
+    infoDiv.appendChild(catSpan);
+    const h4 = document.createElement('h4');
+    h4.textContent = product.name;
+    infoDiv.appendChild(h4);
+    const p = document.createElement('p');
+    p.textContent = shortDescription;
+    infoDiv.appendChild(p);
+    const priceDiv = document.createElement('div');
+    priceDiv.className = 'product-price';
+    priceDiv.textContent = product.price;
+    infoDiv.appendChild(priceDiv);
+    const a = document.createElement('a');
+    a.href = 'contact.html';
+    a.className = 'btn btn-primary';
+    a.textContent = 'Inquire Now';
+    infoDiv.appendChild(a);
+    card.appendChild(infoDiv);
+
+    return card;
 }
 
 /* ============================================
@@ -289,9 +378,9 @@ function renderProducts(products) {
 function handleGoogleDriveImageError(imgElement) {
     const originalSrc = imgElement.getAttribute('data-original-image') || imgElement.src;
     const productName = imgElement.alt || 'Product';
-    
+
     console.warn(`[Google Drive] Image failed to load: ${originalSrc}`);
-    
+
     // Extract file ID from the URL
     let fileId = null;
     const patterns = [
@@ -299,7 +388,7 @@ function handleGoogleDriveImageError(imgElement) {
         /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/,
         /drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/
     ];
-    
+
     for (const pattern of patterns) {
         const match = originalSrc.match(pattern);
         if (match && match[1]) {
@@ -307,7 +396,7 @@ function handleGoogleDriveImageError(imgElement) {
             break;
         }
     }
-    
+
     if (fileId) {
         // Try alternative URL formats
         const alternativeUrls = [
@@ -315,10 +404,10 @@ function handleGoogleDriveImageError(imgElement) {
             `https://drive.google.com/uc?export=download&id=${fileId}`,
             `https://drive.google.com/thumbnail?id=${fileId}&sz=w800-h600`
         ];
-        
+
         // Check if we've already tried formats (stored in data attribute)
         const triedFormats = parseInt(imgElement.getAttribute('data-tried-formats') || '0');
-        
+
         if (triedFormats < alternativeUrls.length) {
             const nextUrl = alternativeUrls[triedFormats];
             console.log(`[Google Drive] Trying alternative format ${triedFormats + 1}: ${nextUrl}`);
@@ -327,7 +416,7 @@ function handleGoogleDriveImageError(imgElement) {
             return; // Don't show placeholder yet, try the alternative
         }
     }
-    
+
     // If all formats failed, show placeholder
     console.error(`[Google Drive] All URL formats failed for: ${productName}`);
     imgElement.src = `https://placehold.co/400x300/8B1A1A/F5F0E8?text=${encodeURIComponent(productName)}`;
@@ -338,19 +427,19 @@ function handleGoogleDriveImageError(imgElement) {
    ============================================ */
 function convertGoogleDriveUrl(url) {
     if (!url || typeof url !== 'string') return url || '';
-    
+
     // Trim whitespace
     url = url.trim();
-    
+
     // Return empty string if URL is empty
     if (url === '') return '';
-    
+
     // Check if it's a Google Drive sharing link
     // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
     // Also handles: https://drive.google.com/open?id=FILE_ID
     // NOTE: The file must be shared publicly (Anyone with the link can view) for this to work
     let fileId = null;
-    
+
     // Pattern 1: /file/d/FILE_ID/ (most common format)
     // Matches: https://drive.google.com/file/d/1ZDXm4J4uTNA4QZIgb1C--z6IIXbtMj05/view?usp=sharing
     // Updated regex to capture file ID more reliably (handles dashes, underscores, alphanumeric)
@@ -359,7 +448,7 @@ function convertGoogleDriveUrl(url) {
     if (match1 && match1[1]) {
         fileId = match1[1];
     }
-    
+
     // Pattern 2: /open?id=FILE_ID
     if (!fileId) {
         const pattern2 = /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/;
@@ -368,7 +457,7 @@ function convertGoogleDriveUrl(url) {
             fileId = match2[1];
         }
     }
-    
+
     // Pattern 3: /uc?id=FILE_ID (already a direct link, but extract ID)
     if (!fileId) {
         const pattern3 = /drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/;
@@ -377,21 +466,21 @@ function convertGoogleDriveUrl(url) {
             fileId = match3[1];
         }
     }
-    
+
     if (fileId) {
         // Convert to direct image URL
         // Use thumbnail endpoint which is more reliable for images
         // This format works better than uc?export=view for publicly shared files
         const directUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000-h1000`;
-        
+
         console.log(`[Google Drive] Converting URL`);
         console.log(`  Original: ${url.substring(0, 80)}${url.length > 80 ? '...' : ''}`);
         console.log(`  File ID: ${fileId}`);
         console.log(`  Direct URL: ${directUrl}`);
-        
+
         return directUrl;
     }
-    
+
     // If not a Google Drive link, return as is
     return url;
 }
@@ -405,10 +494,10 @@ function createProductCard(product) {
         console.log(`[Product Card] Product: ${product.name}`);
         console.log(`[Product Card] Original image URL: ${product.image}`);
     }
-    
+
     // Get main image - check both 'image' and 'images' columns
     let mainImage = product.image || '';
-    
+
     // If main image is empty, try to get first image from images column
     if (!mainImage && product.images) {
         const imagesList = product.images.split(',').map(img => img.trim()).filter(img => img);
@@ -416,35 +505,35 @@ function createProductCard(product) {
             mainImage = imagesList[0];
         }
     }
-    
+
     // Convert main image if it's a Google Drive link
     const originalMainImage = mainImage;
     mainImage = convertGoogleDriveUrl(mainImage);
-    
+
     if (originalMainImage !== mainImage && originalMainImage.includes('drive.google.com')) {
         console.log(`[Product Card] Converted image for ${product.name}: ${originalMainImage.substring(0, 50)}... -> ${mainImage}`);
     }
-    
+
     // Convert all images in the images array
-    const imagesArray = product.images 
-        ? product.images.split(',').map(img => convertGoogleDriveUrl(img.trim())).filter(img => img)
-        : (mainImage ? [mainImage] : []);
-    
+    const imagesArray = product.images ?
+        product.images.split(',').map(img => convertGoogleDriveUrl(img.trim())).filter(img => img) :
+        (mainImage ? [mainImage] : []);
+
     // If images array is empty but we have a main image, use it
     if (imagesArray.length === 0 && mainImage) {
         imagesArray.push(mainImage);
     }
-    
+
     const imagesJson = JSON.stringify(imagesArray);
     const categorySlug = product.category.toLowerCase().replace(/\s+/g, '-');
     const shopeeLink = product.shopee_link || product.shopee || product.shopee_link || '';
     const specs = product.specs || product.specifications || product.spec || '';
     const fullDescription = product.full_description || product.description || product.desc || '';
-    
+
     // Short description for card (first 100 chars)
-    const shortDescription = product.description.length > 100 
-        ? product.description.substring(0, 100) + '...' 
-        : product.description;
+    const shortDescription = product.description.length > 100 ?
+        product.description.substring(0, 100) + '...' :
+        product.description;
 
     return `
         <div class="product-card animate-on-scroll" 

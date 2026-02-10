@@ -876,37 +876,48 @@ function openProductModal(card) {
         }
     }
 
-    // Get full description from data attribute (preserve line breaks)
+
+    // Get full description from data attribute (preserve line breaks, SAFE)
     const fullDescription = card.getAttribute('data-description');
     if (fullDescription && modalDescription) {
-        // Decode and convert newlines to <br> tags for HTML display
         const decodedDescription = decodeURIComponent(fullDescription);
-        modalDescription.innerHTML = decodedDescription
-            .replace(/\n/g, '<br>')
-            .replace(/•/g, '<br>•');
+        // Clear and append as text, preserving line breaks
+        modalDescription.textContent = '';
+        decodedDescription.split(/\n|•/).forEach((line, idx, arr) => {
+            if (line.trim() !== '') {
+                if (idx > 0 && arr[idx-1].endsWith('•')) {
+                    // If previous was a bullet, add bullet prefix
+                    modalDescription.appendChild(document.createTextNode('• '));
+                }
+                modalDescription.appendChild(document.createTextNode(line.trim()));
+                modalDescription.appendChild(document.createElement('br'));
+            }
+        });
     }
 
-    // Get specs from data attribute or generate defaults
+    // Get specs from data attribute or generate defaults (SAFE)
     const specsData = card.getAttribute('data-specs');
     const modalSpecs = document.getElementById('modalProductSpecs');
-    
     if (modalSpecs) {
         const decodedSpecs = specsData ? decodeURIComponent(specsData).trim() : '';
         const specsContainer = modalSpecs.closest('.modal-specs');
-        
         if (decodedSpecs !== '') {
             // Parse specs from spreadsheet (separated by | or • or newlines)
             const specsArray = decodedSpecs
                 .split(/[|•\n]/)
                 .map(s => s.trim())
                 .filter(s => s.length > 0);
-            modalSpecs.innerHTML = specsArray.map(spec => `<li>${spec}</li>`).join('');
-            // Show specs section
+            // Clear and append as text nodes
+            modalSpecs.innerHTML = '';
+            specsArray.forEach(spec => {
+                const li = document.createElement('li');
+                li.textContent = spec;
+                modalSpecs.appendChild(li);
+            });
             if (specsContainer) {
                 specsContainer.style.display = 'block';
             }
         } else {
-            // No specs in spreadsheet - hide the specs section
             if (specsContainer) {
                 specsContainer.style.display = 'none';
             }
